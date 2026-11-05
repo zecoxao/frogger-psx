@@ -574,4 +574,3 @@ extern	MR_VOID		SwitchOffOptionsMenu(MR_VOID);
 extern	MR_VOID		SwitchOnOptionsMenu(MR_VOID);
 
 #endif	//__TEMPOPT_H
-

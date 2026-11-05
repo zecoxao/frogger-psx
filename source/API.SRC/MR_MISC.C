@@ -172,10 +172,14 @@ MR_VOID	MRInitialise(MR_VOID)
 	// default behaviour). This means our MRVp_otz_shift is valid for all
 	// GTE 'Z' values
 
+#ifdef __mips__
 	__asm__ volatile ( "ctc2 %0, $29" : : "r" (4096/3));
 	__asm__ volatile ( "ctc2 %0, $30" : : "r" (4096/4));
+#else
+	/* PC port: GTE control regs C2_ZSF3/ZSF4. The software GTE (milestone 2)
+	 * owns these; AVSZ3/AVSZ4 scaling will read them from there. */
+#endif
 
 }
 
 
-

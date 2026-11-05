@@ -3066,4 +3066,3 @@ MR_VOID HSViewRestoreStackStatus(MR_VOID)
 #pragma warning (default : 4761)
 #endif
 
-

@@ -216,4 +216,3 @@ MR_VOID	MRLoadOverlay(MR_LONG overlay_id)
 	FlushCache();
 	ExitCriticalSection();
 }
-

@@ -249,4 +249,3 @@ MR_VOID	MRExceptionPrint(MR_STRPTR txt)
 		txt++;
 		}		
 }
-

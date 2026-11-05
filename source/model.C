@@ -524,4 +524,3 @@ MR_VOID	LoadGenericWad(MR_LONG	mode)
 		Game_flags |= GAME_FLAG_GEN_WAD_LOADED;
 		}
 }
-

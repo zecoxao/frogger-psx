@@ -158,4 +158,3 @@ extern	MR_OBJECT*		MRCreateMemfixedWithInstsPgen(MR_PGEN_INIT*, MR_FRAME*, MR_UL
 
 #endif	//__MR_PART_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

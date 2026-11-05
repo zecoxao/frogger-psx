@@ -397,4 +397,3 @@ MRDisplayMeshPolys_GE3:
 
 		end					
 
-

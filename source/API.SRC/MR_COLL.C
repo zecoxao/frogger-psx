@@ -2150,4 +2150,3 @@ MR_BOOL	MRCollisionCheck(	MR_COLLCHECK*	collcheck,
 
 	return(TRUE);
 }
-

@@ -379,7 +379,7 @@ MR_VOID	MRStaticResolveMOFTextures(MR_MOF* mof_ptr)
 						((MR_MPRIM_FT3*)prim_ptr)->mp_v1 = ((((MR_MPRIM_FT3*)prim_ptr)->mp_v1 * text_ptr->te_h)/255) + text_ptr->te_v0;
 						((MR_MPRIM_FT3*)prim_ptr)->mp_u2 = ((((MR_MPRIM_FT3*)prim_ptr)->mp_u2 * text_ptr->te_w)/255) + text_ptr->te_u0;
 						((MR_MPRIM_FT3*)prim_ptr)->mp_v2 = ((((MR_MPRIM_FT3*)prim_ptr)->mp_v2 * text_ptr->te_h)/255) + text_ptr->te_v0;
-						((MR_MPRIM_FT3*)prim_ptr)++;
+						prim_ptr = (MR_MPRIM_FT3*)prim_ptr + 1;
 						prims--;
 						}
 					break;
@@ -399,7 +399,7 @@ MR_VOID	MRStaticResolveMOFTextures(MR_MOF* mof_ptr)
 						((MR_MPRIM_FT4*)prim_ptr)->mp_v2 = ((((MR_MPRIM_FT4*)prim_ptr)->mp_v2 * text_ptr->te_h)/255) + text_ptr->te_v0;
 						((MR_MPRIM_FT4*)prim_ptr)->mp_u3 = ((((MR_MPRIM_FT4*)prim_ptr)->mp_u3 * text_ptr->te_w)/255) + text_ptr->te_u0;
 						((MR_MPRIM_FT4*)prim_ptr)->mp_v3 = ((((MR_MPRIM_FT4*)prim_ptr)->mp_v3 * text_ptr->te_h)/255) + text_ptr->te_v0;
-						((MR_MPRIM_FT4*)prim_ptr)++;
+						prim_ptr = (MR_MPRIM_FT4*)prim_ptr + 1;
 						prims--;
 						}
 					break;
@@ -427,7 +427,7 @@ MR_VOID	MRStaticResolveMOFTextures(MR_MOF* mof_ptr)
 						((MR_MPRIM_GT3*)prim_ptr)->mp_v1 = ((((MR_MPRIM_GT3*)prim_ptr)->mp_v1 * text_ptr->te_h)/255) + text_ptr->te_v0;
 						((MR_MPRIM_GT3*)prim_ptr)->mp_u2 = ((((MR_MPRIM_GT3*)prim_ptr)->mp_u2 * text_ptr->te_w)/255) + text_ptr->te_u0;
 						((MR_MPRIM_GT3*)prim_ptr)->mp_v2 = ((((MR_MPRIM_GT3*)prim_ptr)->mp_v2 * text_ptr->te_h)/255) + text_ptr->te_v0;
-						((MR_MPRIM_GT3*)prim_ptr)++;
+						prim_ptr = (MR_MPRIM_GT3*)prim_ptr + 1;
 						prims--;
 						}
 					break;
@@ -447,7 +447,7 @@ MR_VOID	MRStaticResolveMOFTextures(MR_MOF* mof_ptr)
 						((MR_MPRIM_GT4*)prim_ptr)->mp_v2 = ((((MR_MPRIM_GT4*)prim_ptr)->mp_v2 * text_ptr->te_h)/255) + text_ptr->te_v0;
 						((MR_MPRIM_GT4*)prim_ptr)->mp_u3 = ((((MR_MPRIM_GT4*)prim_ptr)->mp_u3 * text_ptr->te_w)/255) + text_ptr->te_u0;
 						((MR_MPRIM_GT4*)prim_ptr)->mp_v3 = ((((MR_MPRIM_GT4*)prim_ptr)->mp_v3 * text_ptr->te_h)/255) + text_ptr->te_v0;
-						((MR_MPRIM_GT4*)prim_ptr)++;
+						prim_ptr = (MR_MPRIM_GT4*)prim_ptr + 1;
 						prims--;
 						}
 					break;
@@ -1083,4 +1083,3 @@ MR_VOID	MRStaticDisplayMeshInstance(MR_MESH_INST*	mesh_inst_ptr,
 		MRDebugPlotHilitePrims(smesh_ptr->sm_mof_ptr, part, mesh_inst_ptr, MR_DEBUG_DISPLAY_HILITE_PRIMS_COLOUR);
 }
 
-

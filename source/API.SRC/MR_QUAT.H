@@ -115,4 +115,3 @@ extern			MR_VOID	MRNormaliseQuaternionASM(MR_QUAT*, MR_QUAT*, MR_USHORT);
 
 
 
-

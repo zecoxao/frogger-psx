@@ -220,4 +220,3 @@ MR_VOID	MRAnimEnvFlipbookSetCel(MR_ANIM_ENV*	env,
 		env_flip->ae_cel_number = cel;
 		}
 }
-

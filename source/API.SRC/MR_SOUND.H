@@ -224,4 +224,3 @@ extern	MR_VOID				MRSNDSetVolumeLevel(MR_ULONG, MR_ULONG);
 #endif	//__MR_SOUND_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

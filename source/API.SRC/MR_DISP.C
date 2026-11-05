@@ -318,10 +318,15 @@ MR_VOID	MRInitialiseCallbacks(MR_VOID)
 	ExitCriticalSection();
 
 	// Point a variable at the current tasks EPc address
-	ic_tot		= (struct ToT*)0x100;
+#ifdef __mips__
+	ic_tot		= (struct ToT*)0x100;			// PSX BIOS Table-of-Tables
 	ic_tcbh		= (struct TCBH*)((ic_tot+1)->head);
 	ic_tcb		= (struct TCB*)(ic_tcbh->entry);
 	MRUser_pc	= (MR_ULONG *)&ic_tcb->reg[R_EPC];
+#else
+	// PC port: no PSX kernel at 0x100. MRUser_pc is debug/gatso only.
+	{ static MR_ULONG port_dummy_epc; MRUser_pc = &port_dummy_epc; }
+#endif
 
 	// Clear gatso/general variables
 	MRFrame_number	= 0;
@@ -1694,4 +1699,3 @@ MR_VOID	MRSetGatsoDisplayStatus(MR_BOOL display)
 #endif
 }
 
-

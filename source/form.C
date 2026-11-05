@@ -52,4 +52,3 @@ FORM_BOOK*	Form_library_ptrs[2];	// [0] points to Form_library_???, [1] points t
 //	Form_library_ptrs[1] = Form_libraries[Game_map_theme];
 //}
 
-

@@ -1460,4 +1460,3 @@ MR_VOID	MRSetTextColour(MR_TEXT_AREA*	area,
 			}
 		}
 }
-

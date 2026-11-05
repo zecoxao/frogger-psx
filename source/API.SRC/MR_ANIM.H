@@ -695,4 +695,3 @@ extern	MR_VOID				MRAnimEnvDeleteEvents(MR_ANIM_ENV*);
 
 #endif	//__MR_ANIM_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS 
-

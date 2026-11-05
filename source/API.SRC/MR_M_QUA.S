@@ -828,4 +828,3 @@ MRInterpolateQuaternionsBToMatrixASM:
 		jr	ra
 		addiu	sp, sp, sizeof_MRIQUATBM_STACK
 
-

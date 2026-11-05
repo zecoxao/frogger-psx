@@ -1727,4 +1727,3 @@ MR_VOID	MRDebugPlot2DWorldPolyF4(	MR_SVEC*	points,
 #endif
 }
 
-

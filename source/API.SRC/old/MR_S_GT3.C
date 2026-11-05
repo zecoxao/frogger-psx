@@ -175,4 +175,3 @@ MR_VOID	MRSpecialDisplayMeshPolys_GT3(	MR_SVEC* 		vert_ptr,
 	param_ptr->p_prim_ptr	= prim_ptr;
 
 }
-

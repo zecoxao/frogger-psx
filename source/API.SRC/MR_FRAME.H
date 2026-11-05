@@ -95,4 +95,3 @@ extern	MR_VOID			MRChangeFrameParent(MR_FRAME*, MR_FRAME*);
 #endif	//__MR_FRAME_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

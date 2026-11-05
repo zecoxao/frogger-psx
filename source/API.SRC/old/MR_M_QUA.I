@@ -92,4 +92,3 @@ MRIQUATBM_STACK_dquat	rh	4
 sizeof_MRIQUATBM_STACK	rb	0
 
 
-

@@ -14,7 +14,6 @@
 
 // Include the Vorg-generated .c files (will all be compiled to a single sprdata.obj)
 
-#include	"..\vlo\frogvram.c"
+#include	"../vlo/frogvram.c"
 
 
-

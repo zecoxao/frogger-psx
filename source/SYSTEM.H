@@ -98,8 +98,8 @@
 //-----------------------------------------------------------------------------
 // Include files 
 
-#include	<sys\types.h>
-#include 	<sys\file.h>
+#include	<sys/types.h>
+#include 	<sys/file.h>
 #include 	<r3000.h>
 #include 	<asm.h>
 #include	<kernel.h>
@@ -255,4 +255,3 @@ extern	LONG				routine_list_index;
 
 #endif	//__SYSTEM_H
 
-

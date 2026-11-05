@@ -538,9 +538,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				setlen(prims0, 4);
 				setlen(prims1, 4);
 #endif
-				((POLY_F3*)prims0)++;
-				((POLY_F3*)prims1)++;
-				((MAP_F3*)mpoly)++;
+				prims0 = (POLY_F3*)prims0 + 1;
+				prims1 = (POLY_F3*)prims1 + 1;
+				mpoly = (MAP_F3*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -572,9 +572,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				setlen(prims0, 5);
 				setlen(prims1, 5);
 #endif
-				((POLY_F4*)prims0)++;
-				((POLY_F4*)prims1)++;
-				((MAP_F4*)mpoly)++;
+				prims0 = (POLY_F4*)prims0 + 1;
+				prims1 = (POLY_F4*)prims1 + 1;
+				mpoly = (MAP_F4*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -627,9 +627,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				MR_COPY16(((POLY_FT3*)prims0)->u2, ((MAP_FT3*)mpoly)->mp_u2);
 				MR_COPY16(((POLY_FT3*)prims1)->u2, ((MAP_FT3*)mpoly)->mp_u2);
 
-				((POLY_FT3*)prims0)++;
-				((POLY_FT3*)prims1)++;
-				((MAP_FT3*)mpoly)++;
+				prims0 = (POLY_FT3*)prims0 + 1;
+				prims1 = (POLY_FT3*)prims1 + 1;
+				mpoly = (MAP_FT3*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -692,9 +692,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				MR_COPY16(((POLY_FT4*)prims1)->u2, ((MAP_FT4*)mpoly)->mp_u2);
 				MR_COPY16(((POLY_FT4*)prims1)->u3, ((MAP_FT4*)mpoly)->mp_u3);
 
-				((POLY_FT4*)prims0)++;
-				((POLY_FT4*)prims1)++;
-				((MAP_FT4*)mpoly)++;
+				prims0 = (POLY_FT4*)prims0 + 1;
+				prims1 = (POLY_FT4*)prims1 + 1;
+				mpoly = (MAP_FT4*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -730,9 +730,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				setlen(prims0, 6);
 				setlen(prims1, 6);
 #endif
-				((POLY_G3*)prims0)++;
-				((POLY_G3*)prims1)++;
-				((MAP_G3*)mpoly)++;
+				prims0 = (POLY_G3*)prims0 + 1;
+				prims1 = (POLY_G3*)prims1 + 1;
+				mpoly = (MAP_G3*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -770,9 +770,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				setlen(prims0, 8);
 				setlen(prims1, 8);
 #endif
-				((POLY_G4*)prims0)++;
-				((POLY_G4*)prims1)++;
-				((MAP_G4*)mpoly)++;
+				prims0 = (POLY_G4*)prims0 + 1;
+				prims1 = (POLY_G4*)prims1 + 1;
+				mpoly = (MAP_G4*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -829,9 +829,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				MR_COPY16(((POLY_GT3*)prims0)->u2, ((MAP_GT3*)mpoly)->mp_u2);
 				MR_COPY16(((POLY_GT3*)prims1)->u2, ((MAP_GT3*)mpoly)->mp_u2);
 
-				((POLY_GT3*)prims0)++;
-				((POLY_GT3*)prims1)++;
-				((MAP_GT3*)mpoly)++;
+				prims0 = (POLY_GT3*)prims0 + 1;
+				prims1 = (POLY_GT3*)prims1 + 1;
+				mpoly = (MAP_GT3*)mpoly + 1;
 				}
 			}
 		//-----------
@@ -892,9 +892,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				MR_COPY16(((POLY_GT4*)prims1)->u2, ((MAP_GT4*)mpoly)->mp_u2);
 				MR_COPY16(((POLY_GT4*)prims1)->u3, ((MAP_GT4*)mpoly)->mp_u3);
 
-				((POLY_GT4*)prims0)++;
-				((POLY_GT4*)prims1)++;
-				((MAP_GT4*)mpoly)++;
+				prims0 = (POLY_GT4*)prims0 + 1;
+				prims1 = (POLY_GT4*)prims1 + 1;
+				mpoly = (MAP_GT4*)mpoly + 1;
 				}
 			}
 
@@ -927,9 +927,9 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 				setlen(prims0, 4);
 				setlen(prims1, 4);
 #endif
-				((LINE_G2*)prims0)++;
-				((LINE_G2*)prims1)++;
-				((MAP_G2*)mpoly)++;
+				prims0 = (LINE_G2*)prims0 + 1;
+				prims1 = (LINE_G2*)prims1 + 1;
+				mpoly = (MAP_G2*)mpoly + 1;
 				}
 			}
 #endif
@@ -2539,4 +2539,3 @@ MR_VOID	MapUpdateAnimatedPolys(MR_VOID)
 #endif
 }
 
-

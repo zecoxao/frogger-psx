@@ -178,4 +178,3 @@ extern	MR_VOID			MRSetTextColour(MR_TEXT_AREA*, MR_USHORT,	MR_ULONG);
 #endif	//__MR_FONT_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

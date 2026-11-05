@@ -129,8 +129,8 @@ MR_VOID	MRDisplayMeshPolys_FT3(	MR_SVEC* 		vert_ptr,
 
 	//---------------
 	next_poly:
-			((POLY_FT3*)mem_ptr)++;
-			((MR_MPRIM_FT3*)prim_ptr)++;
+			mem_ptr = (POLY_FT3*)mem_ptr + 1;
+			prim_ptr = (MR_MPRIM_FT3*)prim_ptr + 1;
 			param_ptr->p_prims--;
 		}
 	
@@ -142,4 +142,3 @@ MR_VOID	MRDisplayMeshPolys_FT3(	MR_SVEC* 		vert_ptr,
 
 
 
-

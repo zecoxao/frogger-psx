@@ -2054,4 +2054,3 @@ MR_VOID SnapFrogToOtherFrog(	FROG*	frog_a,
 	MRSNDPlaySound(SFX_GEN_FROG_COLL_STACK, NULL, 0, 0);
 }
 
-

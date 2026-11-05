@@ -17,7 +17,7 @@
 #include "gamesys.h"
 #include "project.h"
 #include "sound.h"
-#include "..\vlo\frogvram.h"
+#include "../vlo/frogvram.h"
    
 /******************************************************************************
 *%%%% ENTSTRDesCreateFallingRock

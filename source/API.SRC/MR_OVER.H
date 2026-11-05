@@ -57,4 +57,3 @@ extern	MR_VOID		MRLoadOverlay(MR_LONG overlay_id);
 #endif	//__MR_OVER_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

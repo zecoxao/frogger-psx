@@ -136,7 +136,7 @@ MR_VOID	MRDisplayMeshPolys_HLF4(MR_SVEC* 		vert_ptr,
 	//---------------
 	next_poly:
 			mem_ptr += (sizeof(LINE_F3) * 2 + sizeof(POLY_F4)) >> 2;
-			((MR_MPRIM_HLF4*)prim_ptr)++;
+			prim_ptr = (MR_MPRIM_HLF4*)prim_ptr + 1;
 			param_ptr->p_prims--;
 		}
 	
@@ -146,4 +146,3 @@ MR_VOID	MRDisplayMeshPolys_HLF4(MR_SVEC* 		vert_ptr,
 }
 
 
-

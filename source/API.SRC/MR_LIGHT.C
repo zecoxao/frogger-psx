@@ -417,4 +417,3 @@ MR_ULONG	MRCalculateCustomInstanceLights(MR_OBJECT*	object,
 	
 	return(lights_modified);
 }
-

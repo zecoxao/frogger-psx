@@ -240,4 +240,3 @@ MR_VOID	MRCalculateOTInfoFromMOF(	MR_MOF*	mof_ptr,
 	ot_ptr->ot_zshift = s;
 }
 
-

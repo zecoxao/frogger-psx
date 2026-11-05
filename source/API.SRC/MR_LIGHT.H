@@ -77,4 +77,3 @@ extern	MR_ULONG  	MRCalculateCustomInstanceLights(MR_OBJECT*, MR_ULONG, MR_CVEC*
 
 #endif	//__MR_LIGHT_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

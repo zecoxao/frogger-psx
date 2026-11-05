@@ -1452,4 +1452,3 @@ MR_OBJECT*	MRCreateMemfixedWithInsts3DSprite(	MR_FRAME*		frame,
 
 
 																				
-

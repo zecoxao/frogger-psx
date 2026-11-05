@@ -475,11 +475,11 @@ FG_GOF* SwpCreateSTATWasteBarrel(MR_VOID* data)
 *
 *%%%**************************************************************************/
 
-#include "level\swp_c.h"
-#include "general\sound.h"
-#include "entities\entgen.h"
+#include "level/swp_c.h"
+#include "general/sound.h"
+#include "entities/entgen.h"
 #include "define.h"
-#include "game\frog.h" 
+#include "game/frog.h" 
 
 /******************************************************************************
 *%%%% SwpUpdateOilDrum

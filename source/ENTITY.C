@@ -3563,4 +3563,3 @@ MR_VOID LiveEntityFreePop(LIVE_ENTITY*	live_entity)
 
 	live_entity->le_effect = NULL;
 }
-

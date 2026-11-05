@@ -207,4 +207,3 @@ extern	MR_MEMFIXED*	MRInitMemfixedWithInstsPgen(MR_MEMFIXED**, MR_USHORT,	MR_USH
 #endif	//__MR_MEM_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

@@ -4568,4 +4568,3 @@ MR_VOID GameGetMultiplayerFrogCheckpointData(	MR_LONG*	checkpoint_count,
 #ifdef WIN95
 #pragma warning (default : 4761)
 #endif // win95
-

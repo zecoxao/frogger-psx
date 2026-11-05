@@ -58,3 +58,5 @@ stdout.txt
 
 # Ignore .LIBs in elf folder
 /sdk/lib/elf/*.LIB
+# PC port build artifacts
+/port/build/

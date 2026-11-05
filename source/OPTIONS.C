@@ -865,4 +865,3 @@ MR_VOID MakeSpriteInvisible(MR_2DSPRITE *sprite)
 }
 
 
-

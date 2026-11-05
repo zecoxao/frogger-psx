@@ -702,4 +702,3 @@ MR_VOID	MRMouseRead(MR_ULONG port)
 	MRMouse_delta_buttons	= MRInput[port].in_mbutt_delta;
 
 }
-

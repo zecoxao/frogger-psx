@@ -3239,7 +3239,7 @@ MR_VOID LSCreateMemoryCards(MR_VOID)
 	// Create two memory card models
 	for (i = 0; i < 2; i++)
 		{
-		(MR_UBYTE*)LS_extras_matrix_ptr[i] = LS_matrices + (sizeof(MR_MAT)*i);
+		LS_extras_matrix_ptr[i] = (MR_MAT*)(LS_matrices + (sizeof(MR_MAT)*i));
 		MR_COPY_MAT(LS_extras_matrix_ptr[i], &Option_viewport_ptr->vp_camera->fr_matrix);
 
 		pos.vx = -0x200+(i*0x400);

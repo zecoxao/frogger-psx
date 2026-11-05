@@ -129,4 +129,3 @@ extern	MR_VOID		MRDebugPlot2DWorldPolyF4(MR_SVEC*, POLY_F4*);
 
 #endif	//__MR_DEBUG_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

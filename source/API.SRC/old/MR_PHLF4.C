@@ -146,4 +146,3 @@ MR_VOID	MRDisplayMeshPolys_HLF4(MR_SVEC* 		vert_ptr,
 }
 
 
-

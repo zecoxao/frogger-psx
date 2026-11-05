@@ -1051,7 +1051,7 @@ MR_VOID	MRAnimDisplayMeshInstance(	MR_MESH_INST*	mesh_inst_ptr,
 		prim_set++;
 
 		if (anim_env->ae_special_flags & MR_ANIM_ENV_STORE_LW_TRANSFORMS)
-			((MR_MAT*)part_transform)++;
+			part_transform = (MR_MAT*)part_transform + 1;
 		}
 
 	// If we've overwritten the colour matrix for this mesh, set it back to the viewport colour matrix
@@ -4001,4 +4001,3 @@ MR_VOID	MRAnimEnvDeleteEvents(MR_ANIM_ENV*	env)
 
 	env->ae_special_flags &= ~MR_ANIM_ENV_EVENT_LIST_ACTIVE;
 }
-

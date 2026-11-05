@@ -282,4 +282,3 @@ extern	MR_VOID			MRSetGatsoDisplayStatus(MR_BOOL);
 
 #endif	//__MR_DISP_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

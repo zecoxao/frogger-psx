@@ -1624,4 +1624,3 @@ MR_VOID MapVerticesSort(	MR_SVEC**	first_vertex_pptr,
 
 }
 #endif
-

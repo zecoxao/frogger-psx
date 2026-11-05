@@ -33,7 +33,7 @@
 #ifndef	__MR_SYS_H
 #define	__MR_SYS_H
 
-#include	"..\system.h"					// PSX system file
+#include	"../system.h"					// PSX system file
 
 
 // Defines

@@ -179,4 +179,3 @@ MR_VOID	MRSpecialDisplayMeshPolys_F4(	MR_SVEC* 		vert_ptr,
 
 
 
-

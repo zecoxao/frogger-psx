@@ -42,4 +42,3 @@ extern	MR_FONT_INFO	debug_font;
 
 #endif	//__GAMEFONT_H
 
-

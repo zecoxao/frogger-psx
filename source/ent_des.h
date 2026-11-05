@@ -339,4 +339,3 @@ extern	MR_VOID	ENTSTRDesUpdateTumbleWeed(LIVE_ENTITY*);
 extern	MR_VOID	ENTSTRDesKillTumbleWeed(LIVE_ENTITY*);
 
 #endif //__DES_ENT_H
-

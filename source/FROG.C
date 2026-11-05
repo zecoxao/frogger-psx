@@ -621,15 +621,15 @@ MR_VOID ResetFrog(FROG* frog, MR_LONG gridStartX, MR_LONG gridStartZ, MR_ULONG g
     // Reset frog color. (Remove drowning color, etc)
     // We have a problem, the compiler really wants to inline this function.
     // This version of GCC has no method of allowing for excluding a function from the inliner.
-#ifdef WIN95
+#if defined(WIN95) || !defined(__mips__)
     FrogInitCustomAmbient(frog);
 #else
     asm volatile (
         ".set\tnoreorder\n"
         "jal FrogInitCustomAmbient\n"
         "move $4, %0\n"
-        ".set\treorder\n" 
-        
+        ".set\treorder\n"
+
         :
         : "r" (frog));
 #endif

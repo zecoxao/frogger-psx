@@ -77,4 +77,3 @@ extern	MR_VOID		MRCalculateOTInfoFromMOF(MR_MOF*, MR_OT*);
 
 #endif	//__MR_OT_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

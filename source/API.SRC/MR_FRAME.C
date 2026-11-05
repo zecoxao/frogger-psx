@@ -549,4 +549,3 @@ MR_VOID	MRChangeFrameParent(MR_FRAME*	frame,
 
 	frame->fr_parent = parent;
 }
-

@@ -6975,4 +6975,3 @@ MR_VOID	SwitchOnOptionsMenu(MR_VOID)
 #ifdef WIN95
 #pragma warning (default : 4761)
 #endif
-

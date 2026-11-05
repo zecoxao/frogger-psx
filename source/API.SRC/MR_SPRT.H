@@ -255,4 +255,3 @@ extern	MR_OBJECT*		MRCreateMemfixedWithInsts3DSprite(MR_FRAME*,	MR_ULONG, MR_VOI
 #endif	//__MR_SPRT_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

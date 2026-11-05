@@ -76,6 +76,14 @@ MR_BOOL	Play_stream(MR_ULONG	ps_stream_id)
 {
 	MR_BOOL		ps_quit = FALSE;
 
+#ifndef __mips__
+	/* PC port: FMV/XA streaming (MDEC decode + CD ring buffer) is not wired yet.
+	 * Skip playback so the game advances to the menu/game render path instead of
+	 * deadlocking in the decode loop (which has no VSync). FMV is a later item. */
+	(void)ps_stream_id;
+	return FALSE;
+#endif
+
 #ifdef	PSX_CD_STREAMS
 
 	MR_LONG		ps_delay;
@@ -416,7 +424,7 @@ MR_VOID	Stream_callback(MR_VOID)
 	// In 24-bit mode, call StCdInterrupt() manually
 	if (dec.str_24bit)
 		{
-		extern	StCdIntrFlag;
+		extern	int StCdIntrFlag;
 		if (StCdIntrFlag)
 			{
 			StCdInterrupt();

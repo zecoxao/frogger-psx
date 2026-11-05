@@ -245,4 +245,3 @@ extern	MR_VOID			MRSpecialDisplayMeshPolys_GE4(MR_SVEC*, MR_SVEC*, MR_ULONG*, MR
 #endif	//__MR_MESH_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

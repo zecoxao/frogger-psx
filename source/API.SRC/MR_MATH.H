@@ -72,4 +72,3 @@ extern	MR_VOID		MRGenerateMatrixFromZAxisAndZYPlane(MR_MAT*, MR_VEC*, MR_VEC*);
 
 
 									
-

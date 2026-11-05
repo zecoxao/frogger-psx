@@ -43,4 +43,3 @@ extern	MR_VOID			MRAnimEnvFlipbookSetCel(MR_ANIM_ENV*, MR_SHORT);
 
 #endif	//__MR_ANIM3_H
  
-

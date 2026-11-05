@@ -7,7 +7,7 @@
 //---------------------------------------------------------------------------
 
 #include "mr_all.h"
-#include "..\merge\frogpsx.h"
+#include "../merge/frogpsx.h"
 #include "sound.h"
 #include "project.h"
 #include "gamesys.h"
@@ -483,7 +483,7 @@ MR_VOID	PlayMovingSound(LIVE_ENTITY* live_entity, MR_LONG sfx, MR_LONG min, MR_L
 	
 	if (live_entity->le_moving_sound == NULL)
 		{
-		(MRSND_MOVING_SOUND*)live_entity->le_moving_sound =
+		live_entity->le_moving_sound =
 								 	MRSNDCreateMovingSound(	(MR_VEC*)live_entity->le_lwtrans->t, 
 															(MR_VEC*)live_entity->le_lwtrans->t,
 															(MR_SHORT)sfx,
@@ -688,4 +688,3 @@ MR_LONG	MusicPitchTable[60][2]=
 	 9,	-3,				// Industrial 1
 // ------------------------------------------------------------
 };
-

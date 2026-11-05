@@ -548,4 +548,3 @@ extern	MR_ULONG		MRCalculateMOFAnimatedPolys(MR_MOF*);
 #endif 	//__MR_MOF_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

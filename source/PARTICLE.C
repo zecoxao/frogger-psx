@@ -2726,4 +2726,3 @@ MR_VOID	Gold_frog_glow_disp(MR_PGEN_INST* pgeninst, MR_VIEWPORT* viewport)
 #ifdef WIN95
 #pragma warning (default : 4245)
 #endif
-

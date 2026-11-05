@@ -1020,4 +1020,3 @@ MR_VOID GameCheatModeUnlockLevelZone(MR_ULONG level_id)
 		SelectSetLevelFlags(level_id, SEL_LF_ZONEACCESSIBLE);
 }
 													  
-

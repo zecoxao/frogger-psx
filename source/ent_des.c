@@ -1799,4 +1799,3 @@ MR_VOID	ENTSTRDesKillTumbleWeed(LIVE_ENTITY*	live_entity)
 		weed->tw_shadow->ef_kill_timer = 2;		// Flag this for Kill.
 		}
 }
-

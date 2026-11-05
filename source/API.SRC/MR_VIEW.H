@@ -204,4 +204,3 @@ extern	MR_VOID			MRSetViewportViewDistance(MR_VIEWPORT*, MR_USHORT);
 #endif	//__MR_VIEW_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

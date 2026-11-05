@@ -63,4 +63,3 @@ extern	MR_VOID		LevelSelectShutdown(MR_VOID);
 
 #endif	//__LEVELSEL_H
 
-

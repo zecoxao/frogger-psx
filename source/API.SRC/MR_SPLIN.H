@@ -141,4 +141,3 @@ extern	MR_VOID					MRCalculateSplineBezierArrayPoint(MR_SPLINE_BEZIER_ARRAY*, MR
 
 #endif	//__MR_SPLIN_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

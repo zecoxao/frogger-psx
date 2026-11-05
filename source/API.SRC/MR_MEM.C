@@ -1473,4 +1473,3 @@ MR_MEMFIXED*	MRInitMemfixedWithInstsPgen(MR_MEMFIXED**	memfixed_ptr,
 }
 
 #endif	// MR_MEMFIXED_PGEN
-

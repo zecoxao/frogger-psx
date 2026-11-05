@@ -97,4 +97,3 @@ MR_PP_READBITS		macro
 .bit_exit\@
 			;// v0 now holds result bits
 			endm
-

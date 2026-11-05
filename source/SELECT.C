@@ -2918,4 +2918,3 @@ MR_VOID SelectLevelCollectGoldFrog(MR_VOID)
 #pragma warning (default : 4245)
 #pragma warning (default : 4146)
 #endif
-

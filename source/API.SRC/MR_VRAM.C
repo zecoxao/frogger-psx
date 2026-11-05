@@ -333,4 +333,3 @@ MR_BOOL	MRFreeResourceTextureBlock(MR_ULONG ft_resource_id)
 	return(FALSE);
 }
 
-

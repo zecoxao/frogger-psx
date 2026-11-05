@@ -916,4 +916,3 @@ MR_VOID	CreateCameraMatrix(	CAMERA*	camera,
 	MRPointMatrixAtVector(matrix, target, &Game_y_axis_pos);
 }
 
-

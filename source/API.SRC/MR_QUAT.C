@@ -914,4 +914,3 @@ MR_VOID	MRMatrixToQuaternionB(	MR_MAT* 	m,
 		}
 }
 
-

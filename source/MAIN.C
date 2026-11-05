@@ -913,4 +913,3 @@ int WINAPI	WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 #endif // WIN95
 
-

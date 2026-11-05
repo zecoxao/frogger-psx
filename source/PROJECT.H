@@ -15,7 +15,7 @@
 
 #include	"mr_all.h"
 #include	"binaries.h"
-#include	"..\merge\frogpsx.h"
+#include	"../merge/frogpsx.h"
 
 
 //-----------------------------------------------------------------------------

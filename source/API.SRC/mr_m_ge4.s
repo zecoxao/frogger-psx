@@ -489,4 +489,3 @@ MRDisplayMeshPolys_GE4:
 		addiu	sp, sp, sizeof_MESH_ENVSTACK
 
 		end					
-

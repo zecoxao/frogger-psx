@@ -89,4 +89,3 @@ extern	MR_BOOL		Stream_open_file(MR_STRPTR);
 
 
 
-

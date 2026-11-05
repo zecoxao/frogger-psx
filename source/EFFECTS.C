@@ -2149,8 +2149,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_F3*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_F3*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_F3*)prim_ptr)++;
-					((POLY_F3*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_F3*)prim_ptr + 1;
+					poly_ptr = (POLY_F3*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2174,8 +2174,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_FT3*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_FT3*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_FT3*)prim_ptr)++;
-					((POLY_FT3*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_FT3*)prim_ptr + 1;
+					poly_ptr = (POLY_FT3*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2207,8 +2207,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_G3*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_G3*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_G3*)prim_ptr)++;
-					((POLY_G3*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_G3*)prim_ptr + 1;
+					poly_ptr = (POLY_G3*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2240,8 +2240,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_GT3*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_GT3*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_GT3*)prim_ptr)++;
-					((POLY_GT3*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_GT3*)prim_ptr + 1;
+					poly_ptr = (POLY_GT3*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2269,8 +2269,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_F4*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_F4*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_F4*)prim_ptr)++;
-					((POLY_F4*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_F4*)prim_ptr + 1;
+					poly_ptr = (POLY_F4*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2298,8 +2298,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_FT4*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_FT4*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_FT4*)prim_ptr)++;
-					((POLY_FT4*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_FT4*)prim_ptr + 1;
+					poly_ptr = (POLY_FT4*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2339,8 +2339,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_G4*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_G4*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_G4*)prim_ptr)++;
-					((POLY_G4*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_G4*)prim_ptr + 1;
+					poly_ptr = (POLY_G4*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------
@@ -2380,8 +2380,8 @@ MR_VOID	RenderPolyPiecePop(	POLY_PIECE_POP*	poly_piece_pop,
 							((MR_MPRIM_GT4*)prim_ptr)->mp_cvec.g,
 							((MR_MPRIM_GT4*)prim_ptr)->mp_cvec.b);
 
-					((MR_MPRIM_GT4*)prim_ptr)++;
-					((POLY_GT4*)poly_ptr)++;
+					prim_ptr = (MR_MPRIM_GT4*)prim_ptr + 1;
+					poly_ptr = (POLY_GT4*)poly_ptr + 1;
 					}
 				break;
 			//---------------------------------------------------------------------------------

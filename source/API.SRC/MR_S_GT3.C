@@ -165,8 +165,8 @@ MR_VOID	MRSpecialDisplayMeshPolys_GT3(	MR_SVEC* 		vert_ptr,
 			}
 	//---------------
 	next_poly:
-			((POLY_GT3*)mem_ptr)++;
-			((MR_MPRIM_GT3*)prim_ptr)++;
+			mem_ptr = (POLY_GT3*)mem_ptr + 1;
+			prim_ptr = (MR_MPRIM_GT3*)prim_ptr + 1;
 			param_ptr->p_prims--;
 		}
 	
@@ -175,4 +175,3 @@ MR_VOID	MRSpecialDisplayMeshPolys_GT3(	MR_SVEC* 		vert_ptr,
 	param_ptr->p_prim_ptr	= prim_ptr;
 
 }
-

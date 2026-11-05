@@ -665,4 +665,3 @@ MR_VOID	MRMeshAnimatedPolysSetCels(	MR_MESH*	mesh_ptr,
 }
 
 
-

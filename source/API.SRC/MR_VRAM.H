@@ -123,4 +123,3 @@ extern	MR_BOOL	MRFreeResourceTextureBlock(MR_ULONG);
 
 #endif	//__MR_VRAM_H 
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
-

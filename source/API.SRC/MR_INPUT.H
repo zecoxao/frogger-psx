@@ -364,4 +364,3 @@ extern	MR_VOID	MRMouseRead(MR_ULONG port);
 #endif	//__MR_INPUT_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

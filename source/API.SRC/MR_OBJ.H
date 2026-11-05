@@ -130,4 +130,3 @@ extern	MR_FRAME*		MRDetachFrameFromObject(MR_OBJECT*);
 #endif	//__MR_OBJ_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

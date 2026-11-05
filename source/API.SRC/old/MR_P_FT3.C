@@ -142,4 +142,3 @@ MR_VOID	MRDisplayMeshPolys_FT3(	MR_SVEC* 		vert_ptr,
 
 
 
-

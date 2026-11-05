@@ -156,4 +156,3 @@ MR_VOID	MRDisplayMeshPolys_G3(	MR_SVEC*		vert_ptr,
 
 
 
-

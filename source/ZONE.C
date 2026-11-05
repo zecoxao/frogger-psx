@@ -222,4 +222,3 @@ MR_BOOL	CheckCoordsInZones(	MR_LONG			x,
 	*zone_region_pptr 	= region;
 	return(TRUE);
 }
-

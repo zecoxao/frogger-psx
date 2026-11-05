@@ -336,4 +336,3 @@ MR_OBJECT*	MRCreateMemfixedWithInstsPgen(	MR_PGEN_INIT*	init,
 #endif
 }
 
-

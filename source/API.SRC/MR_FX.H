@@ -105,4 +105,3 @@ extern	MR_VOID		MRProcessEffect(MR_VIEWPORT*);
 #endif	//__MR_FX_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS
 
-

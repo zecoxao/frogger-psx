@@ -302,4 +302,3 @@ MR_VOID	MRProcessEffect(MR_VIEWPORT* viewport)
 }
 
 
-

@@ -263,4 +263,3 @@ MRDisplayMeshPolys_FT4:
 
 		end					
 
-

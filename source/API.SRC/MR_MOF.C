@@ -504,8 +504,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 				while (i--)
 					{
 					setPolyF3((POLY_F3*)mem);
-					((POLY_F3*)mem)++;
-					((MR_MPRIM_F3*)prim_ptr)++;
+					mem = (POLY_F3*)mem + 1;
+					prim_ptr = (MR_MPRIM_F3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -514,8 +514,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 				while (i--)
 					{
 					setPolyF4((POLY_F4*)mem);
-					((POLY_F4*)mem)++;
-					((MR_MPRIM_F4*)prim_ptr)++;
+					mem = (POLY_F4*)mem + 1;
+					prim_ptr = (MR_MPRIM_F4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -528,8 +528,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					MR_COPY32(((POLY_FT3*)mem)->u0, ((MR_MPRIM_FT3*)prim_ptr)->mp_u0);
 					MR_COPY32(((POLY_FT3*)mem)->u1, ((MR_MPRIM_FT3*)prim_ptr)->mp_u1);
 					MR_COPY16(((POLY_FT3*)mem)->u2, ((MR_MPRIM_FT3*)prim_ptr)->mp_u2);
-					((POLY_FT3*)mem)++;
-					((MR_MPRIM_FT3*)prim_ptr)++;
+					mem = (POLY_FT3*)mem + 1;
+					prim_ptr = (MR_MPRIM_FT3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -544,8 +544,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					MR_COPY32(((POLY_FT4*)mem)->u1, ((MR_MPRIM_FT4*)prim_ptr)->mp_u1);
 					MR_COPY16(((POLY_FT4*)mem)->u3, ((MR_MPRIM_FT4*)prim_ptr)->mp_u2);
 					MR_COPY16(((POLY_FT4*)mem)->u2, ((MR_MPRIM_FT4*)prim_ptr)->mp_u3);
-					((POLY_FT4*)mem)++;
-					((MR_MPRIM_FT4*)prim_ptr)++;
+					mem = (POLY_FT4*)mem + 1;
+					prim_ptr = (MR_MPRIM_FT4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -554,8 +554,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 				while (i--)
 					{
 					setPolyG3((POLY_G3*)mem);
-					((POLY_G3*)mem)++;
-					((MR_MPRIM_G3*)prim_ptr)++;
+					mem = (POLY_G3*)mem + 1;
+					prim_ptr = (MR_MPRIM_G3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -564,8 +564,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 				while (i--)
 					{
 					setPolyG4((POLY_G4*)mem);
-					((POLY_G4*)mem)++;
-					((MR_MPRIM_G4*)prim_ptr)++;
+					mem = (POLY_G4*)mem + 1;
+					prim_ptr = (MR_MPRIM_G4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -578,8 +578,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					MR_COPY32(((POLY_GT3*)mem)->u0, ((MR_MPRIM_GT3*)prim_ptr)->mp_u0);
 					MR_COPY32(((POLY_GT3*)mem)->u1, ((MR_MPRIM_GT3*)prim_ptr)->mp_u1);
 					MR_COPY16(((POLY_GT3*)mem)->u2, ((MR_MPRIM_GT3*)prim_ptr)->mp_u2);
-					((POLY_GT3*)mem)++;
-					((MR_MPRIM_GT3*)prim_ptr)++;
+					mem = (POLY_GT3*)mem + 1;
+					prim_ptr = (MR_MPRIM_GT3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -593,8 +593,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					MR_COPY32(((POLY_GT4*)mem)->u1, ((MR_MPRIM_GT4*)prim_ptr)->mp_u1);
 					MR_COPY16(((POLY_GT4*)mem)->u3, ((MR_MPRIM_GT4*)prim_ptr)->mp_u2);
 					MR_COPY16(((POLY_GT4*)mem)->u2, ((MR_MPRIM_GT4*)prim_ptr)->mp_u3);
-					((POLY_GT4*)mem)++;
-					((MR_MPRIM_GT4*)prim_ptr)++;
+					mem = (POLY_GT4*)mem + 1;
+					prim_ptr = (MR_MPRIM_GT4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -606,8 +606,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					// Set up texture coords
 					((POLY_FT3*)mem)->tpage	= MREnv_strip->te_tpage_id;
 					((POLY_FT3*)mem)->clut	= MREnv_strip->te_clut_id;
-					((POLY_FT3*)mem)++;
-					((MR_MPRIM_E3*)prim_ptr)++;
+					mem = (POLY_FT3*)mem + 1;
+					prim_ptr = (MR_MPRIM_E3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -619,8 +619,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					// Set up texture coords
 					((POLY_FT4*)mem)->tpage	= MREnv_strip->te_tpage_id;
 					((POLY_FT4*)mem)->clut	= MREnv_strip->te_clut_id;
-					((POLY_FT4*)mem)++;
-					((MR_MPRIM_E4*)prim_ptr)++;
+					mem = (POLY_FT4*)mem + 1;
+					prim_ptr = (MR_MPRIM_E4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -632,8 +632,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					// Set up texture coords
 					((POLY_GT3*)mem)->tpage	= MREnv_strip->te_tpage_id;
 					((POLY_GT3*)mem)->clut	= MREnv_strip->te_clut_id;
-					((POLY_GT3*)mem)++;
-					((MR_MPRIM_GE3*)prim_ptr)++;
+					mem = (POLY_GT3*)mem + 1;
+					prim_ptr = (MR_MPRIM_GE3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -645,8 +645,8 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 					// Set up texture coords
 					((POLY_GT4*)mem)->tpage	= MREnv_strip->te_tpage_id;
 					((POLY_GT4*)mem)->clut	= MREnv_strip->te_clut_id;
-					((POLY_GT4*)mem)++;
-					((MR_MPRIM_GE4*)prim_ptr)++;
+					mem = (POLY_GT4*)mem + 1;
+					prim_ptr = (MR_MPRIM_GE4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -657,11 +657,11 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 //					CatPrim((LINE_F4*)mem, ((LINE_F4*)mem) + 1);
 					setLineF4((LINE_F4*)mem);
 					MR_COPY32(((LINE_F4*)mem)->r0, ((MR_MPRIM_HLF3*)prim_ptr)->mp_cvec.r);
-					((LINE_F4*)mem)++;
+					mem = (LINE_F4*)mem + 1;
 					setPolyF3((POLY_F3*)mem);
 					setRGB0((POLY_F3*)mem, 0x00, 0x00, 0x00);
-					((POLY_F3*)mem)++;
-					((MR_MPRIM_HLF3*)prim_ptr)++;
+					mem = (POLY_F3*)mem + 1;
+					prim_ptr = (MR_MPRIM_HLF3*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -673,14 +673,14 @@ MR_LONG	MRPresetPartPrims(	MR_PART*	part_ptr,
 //					CatPrim(((LINE_F3*)mem + 1), ((LINE_F3*)mem) + 2);
 					setLineF3((LINE_F3*)mem);
 					MR_COPY32(((LINE_F3*)mem)->r0, ((MR_MPRIM_HLF4*)prim_ptr)->mp_cvec.r);
-					((LINE_F3*)mem)++;
+					mem = (LINE_F3*)mem + 1;
 					setLineF3((LINE_F3*)mem);
 					MR_COPY32(((LINE_F3*)mem)->r0, ((MR_MPRIM_HLF4*)prim_ptr)->mp_cvec.r);
-					((LINE_F3*)mem)++;
+					mem = (LINE_F3*)mem + 1;
 					setPolyF4((POLY_F4*)mem);
 					setRGB0((POLY_F4*)mem, 0x00, 0x00, 0x00);
-					((POLY_F4*)mem)++;
-					((MR_MPRIM_HLF4*)prim_ptr)++;
+					mem = (POLY_F4*)mem + 1;
+					prim_ptr = (MR_MPRIM_HLF4*)prim_ptr + 1;
 					prims--;
 					}
 				break;
@@ -1495,8 +1495,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_F3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_F3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_F3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1513,8 +1513,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_FT3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_FT3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_FT3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1531,8 +1531,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_G3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_G3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_G3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1549,8 +1549,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_GT3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_GT3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_GT3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 				
@@ -1567,8 +1567,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_E3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_E3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_E3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 			
@@ -1585,8 +1585,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF3*)dprim_ptr)->mp_cvec, ((MR_MPRIM_GE3*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_GE3*)prim_ptr)++;
-						((MR_MPRIM_HLF3*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_GE3*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF3*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1604,8 +1604,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_F4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_F4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_F4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1623,8 +1623,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_FT4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_FT4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_FT4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1642,8 +1642,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_G4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_G4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_G4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1661,8 +1661,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_GT4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_GT4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_GT4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1680,8 +1680,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_E4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_E4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_E4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -1699,8 +1699,8 @@ MR_MOF*	MRStaticCreateWireframeMOF(	MR_MOF*		smof,
 							MR_SET32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, colour);
 						else
 							MR_COPY32(((MR_MPRIM_HLF4*)dprim_ptr)->mp_cvec, ((MR_MPRIM_GE4*)prim_ptr)->mp_cvec);
-						((MR_MPRIM_GE4*)prim_ptr)++;
-						((MR_MPRIM_HLF4*)dprim_ptr)++;
+						prim_ptr = (MR_MPRIM_GE4*)prim_ptr + 1;
+						dprim_ptr = (MR_MPRIM_HLF4*)dprim_ptr + 1;
 						}
 					break;
 
@@ -2258,4 +2258,3 @@ MR_ULONG	MRCalculateMOFAnimatedPolys(MR_MOF*	mof_ptr)
 	return(p);
 }
 
-

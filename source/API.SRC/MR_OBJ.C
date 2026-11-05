@@ -122,7 +122,7 @@ MR_OBJECT*	MRCreateObject(	MR_USHORT	type,
 				object_ptr 		= (MR_OBJECT*)MRAllocMem(sizeof(MR_OBJECT) + sizeof(MR_MESH) + (i * sizeof(MR_MESH_ANIMATED_POLY)) + sizeof(MR_STATIC_MESH), "MR OBJECT STATIC MESH");
 				}
 			mesh_ptr			= (MR_MESH*)(((MR_UBYTE*)object_ptr) + sizeof(MR_OBJECT));
-			mesh_ptr->me_extra 	= (MR_VOID*)(((MR_UBYTE*)mesh_ptr) + sizeof(MR_MESH));
+			mesh_ptr->me_extra.me_extra_void = (MR_VOID*)(((MR_UBYTE*)mesh_ptr) + sizeof(MR_MESH));
 			mesh_ptr->me_num_animated_polys = i;
 			mesh_ptr->me_animated_polys 	= (MR_MESH_ANIMATED_POLY*)(((MR_UBYTE*)mesh_ptr->me_extra.me_extra_void) + sizeof(MR_STATIC_MESH));
 			break;
@@ -131,7 +131,7 @@ MR_OBJECT*	MRCreateObject(	MR_USHORT	type,
 			i					= MRCalculateMOFAnimatedPolys((MR_MOF*)user_0);
 			object_ptr 			= (MR_OBJECT*)MRAllocMem(sizeof(MR_OBJECT) + sizeof(MR_MESH) + (i * sizeof(MR_MESH_ANIMATED_POLY)) + sizeof(MR_ANIM_MESH), "MR OBJECT ANIM MESH");
 			mesh_ptr			= (MR_MESH*)(((MR_UBYTE*)object_ptr) + sizeof(MR_OBJECT));
-			mesh_ptr->me_extra 	= (MR_VOID*)(((MR_UBYTE*)mesh_ptr) + sizeof(MR_MESH));
+			mesh_ptr->me_extra.me_extra_void = (MR_VOID*)(((MR_UBYTE*)mesh_ptr) + sizeof(MR_MESH));
 			mesh_ptr->me_num_animated_polys = i;
 			mesh_ptr->me_animated_polys 	= (MR_MESH_ANIMATED_POLY*)(((MR_UBYTE*)mesh_ptr->me_extra.me_extra_void) + sizeof(MR_ANIM_MESH));
 			break;
@@ -189,7 +189,7 @@ MR_OBJECT*	MRCreateObject(	MR_USHORT	type,
 			break;
 
 		}
-	object_ptr->ob_extra = (MR_VOID*)(((MR_UBYTE*)object_ptr) + sizeof(MR_OBJECT));
+	object_ptr->ob_extra.ob_extra_void = (MR_VOID*)(((MR_UBYTE*)object_ptr) + sizeof(MR_OBJECT));
 
 	// Link new object into list
 	if (object_ptr->ob_next_node = MRObject_root_ptr->ob_next_node)
@@ -208,7 +208,7 @@ MR_OBJECT*	MRCreateObject(	MR_USHORT	type,
 	// Set up object to point to frame.
 	object_ptr->ob_frame = frame;
 	MR_CLEAR_SVEC(&object_ptr->ob_offset);
-	object_ptr->ob_owner = NULL;
+	object_ptr->ob_owner.ob_owner_void = NULL;
 
 	object_ptr->ob_move_callback = NULL;
 	object_ptr->ob_disp_callback = NULL;
@@ -422,4 +422,3 @@ MR_FRAME*	MRDetachFrameFromObject(MR_OBJECT* object)
 
 
 
-

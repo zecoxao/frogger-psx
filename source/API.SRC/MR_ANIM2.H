@@ -64,4 +64,3 @@ extern	MR_VOID				MRAnimEnvMultipleClearEvent(MR_ANIM_ENV*, MR_USHORT, MR_USHORT
 
 #endif	//__MR_ANIM2_H
 #endif	//__MR_ONLY_INCLUDE_TYPEDEFS 
-
