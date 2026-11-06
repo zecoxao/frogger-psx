@@ -55,6 +55,9 @@ static long  g_prim_otz[PORT_MAX_PRIMS];
 static int   g_prim_count;
 int          port_last_prims;   /* last frame's prim count (read by host) */
 static int   g_cur_tpage;       /* current texture page (set by DR_TPAGE) */
+static int   g_cur_abr;         /* current GPU semi-transparency (ABR) mode 0..3,
+                                 * from the last texpage; used by untextured
+                                 * semi-transparent prims (which carry no tpage) */
 int          port_cnt_sprt, port_cnt_tile, port_cnt_tpage;  /* per-frame, host reads */
 static void  port_draw_prim(void *p);
 
@@ -134,9 +137,12 @@ static void port_draw_prim(void *p)
 
     /* GPU state commands (0xe1 = texture page, etc.): update state, don't draw */
     if (code >= 0xe0) {
-        if (code == 0xe1) { g_cur_tpage = ((u_long*)p)[1] & 0x1ff; port_cnt_tpage++; }  /* DR_TPAGE */
+        if (code == 0xe1) { g_cur_tpage = ((u_long*)p)[1] & 0x1ff; g_cur_abr = (g_cur_tpage >> 5) & 3; port_cnt_tpage++; }  /* DR_TPAGE */
         return;
     }
+    /* PSX ABE bit (code 0x02) enables semi-transparency; the blend mode (ABR) is
+     * carried in a textured prim's tpage, else in the sticky GPU texpage state. */
+    int abe = (code & 0x02);
     /* Sprites/tiles: 2D rects. SPRT is textured with the current tpage. */
     if ((code & 0xe0) == 0x60) {
         if ((code & 0xfc) == 0x64) {                 /* SPRT */
@@ -147,7 +153,7 @@ static void port_draw_prim(void *p)
             uv[0]=u0;   uv[1]=v0;    uv[2]=u0+w; uv[3]=v0;
             uv[4]=u0;   uv[5]=v0+h;  uv[6]=u0+w; uv[7]=v0+h;
             for(i=0;i<4;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-            hostVideoPoly(4,xy,rgb,uv,g_cur_tpage,q->clut);
+            hostVideoPoly(4,xy,rgb,uv,g_cur_tpage,q->clut, abe ? (1 + g_cur_abr) : 0);
         } else if ((code & 0xfc) == 0x60) {          /* TILE (flat rect) */
             TILE *q = (TILE*)p; port_cnt_tile++;
             int x0=q->x0, y0=q->y0, w=q->w, h=q->h, i;
@@ -162,7 +168,7 @@ static void port_draw_prim(void *p)
             xy[0]=x0;   xy[1]=y0;    xy[2]=x0+w; xy[3]=y0;
             xy[4]=x0;   xy[5]=y0+h;  xy[6]=x0+w; xy[7]=y0+h;
             for(i=0;i<4;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-            hostVideoPoly(4,xy,rgb,0,0,0);
+            hostVideoPoly(4,xy,rgb,0,0,0, abe ? (1 + g_cur_abr) : 0);
         }
         return;
     }
@@ -170,41 +176,41 @@ static void port_draw_prim(void *p)
     case 0x20: { POLY_F3 *q=(POLY_F3*)p; int i;              /* flat tri */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2;
         for(i=0;i<3;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-        hostVideoPoly(3,xy,rgb,0,0,0); } break;
+        hostVideoPoly(3,xy,rgb,0,0,0, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x24: { POLY_FT3 *q=(POLY_FT3*)p; int i;            /* flat tex tri */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2;
         uv[0]=q->u0;uv[1]=q->v0; uv[2]=q->u1;uv[3]=q->v1; uv[4]=q->u2;uv[5]=q->v2;
         for(i=0;i<3;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-        hostVideoPoly(3,xy,rgb,uv,q->tpage,q->clut); } break;
+        g_cur_abr=(q->tpage>>5)&3; hostVideoPoly(3,xy,rgb,uv,q->tpage,q->clut, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x28: { POLY_F4 *q=(POLY_F4*)p; int i;              /* flat quad */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2; xy[6]=q->x3;xy[7]=q->y3;
         for(i=0;i<4;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-        hostVideoPoly(4,xy,rgb,0,0,0); } break;
+        hostVideoPoly(4,xy,rgb,0,0,0, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x2c: { POLY_FT4 *q=(POLY_FT4*)p; int i;            /* flat tex quad */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2; xy[6]=q->x3;xy[7]=q->y3;
         uv[0]=q->u0;uv[1]=q->v0; uv[2]=q->u1;uv[3]=q->v1; uv[4]=q->u2;uv[5]=q->v2; uv[6]=q->u3;uv[7]=q->v3;
         for(i=0;i<4;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
-        hostVideoPoly(4,xy,rgb,uv,q->tpage,q->clut); } break;
+        g_cur_abr=(q->tpage>>5)&3; hostVideoPoly(4,xy,rgb,uv,q->tpage,q->clut, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x30: { POLY_G3 *q=(POLY_G3*)p;                     /* gouraud tri */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2;
         rgb[0]=q->r0;rgb[1]=q->g0;rgb[2]=q->b0; rgb[3]=q->r1;rgb[4]=q->g1;rgb[5]=q->b1; rgb[6]=q->r2;rgb[7]=q->g2;rgb[8]=q->b2;
-        hostVideoPoly(3,xy,rgb,0,0,0); } break;
+        hostVideoPoly(3,xy,rgb,0,0,0, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x34: { POLY_GT3 *q=(POLY_GT3*)p;                   /* gouraud tex tri */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2;
         uv[0]=q->u0;uv[1]=q->v0; uv[2]=q->u1;uv[3]=q->v1; uv[4]=q->u2;uv[5]=q->v2;
         rgb[0]=q->r0;rgb[1]=q->g0;rgb[2]=q->b0; rgb[3]=q->r1;rgb[4]=q->g1;rgb[5]=q->b1; rgb[6]=q->r2;rgb[7]=q->g2;rgb[8]=q->b2;
-        hostVideoPoly(3,xy,rgb,uv,q->tpage,q->clut); } break;
+        g_cur_abr=(q->tpage>>5)&3; hostVideoPoly(3,xy,rgb,uv,q->tpage,q->clut, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x38: { POLY_G4 *q=(POLY_G4*)p;                     /* gouraud quad */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2; xy[6]=q->x3;xy[7]=q->y3;
         rgb[0]=q->r0;rgb[1]=q->g0;rgb[2]=q->b0; rgb[3]=q->r1;rgb[4]=q->g1;rgb[5]=q->b1;
         rgb[6]=q->r2;rgb[7]=q->g2;rgb[8]=q->b2; rgb[9]=q->r3;rgb[10]=q->g3;rgb[11]=q->b3;
-        hostVideoPoly(4,xy,rgb,0,0,0); } break;
+        hostVideoPoly(4,xy,rgb,0,0,0, abe ? (1 + g_cur_abr) : 0); } break;
     case 0x3c: { POLY_GT4 *q=(POLY_GT4*)p;                   /* gouraud tex quad */
         xy[0]=q->x0;xy[1]=q->y0; xy[2]=q->x1;xy[3]=q->y1; xy[4]=q->x2;xy[5]=q->y2; xy[6]=q->x3;xy[7]=q->y3;
         uv[0]=q->u0;uv[1]=q->v0; uv[2]=q->u1;uv[3]=q->v1; uv[4]=q->u2;uv[5]=q->v2; uv[6]=q->u3;uv[7]=q->v3;
         rgb[0]=q->r0;rgb[1]=q->g0;rgb[2]=q->b0; rgb[3]=q->r1;rgb[4]=q->g1;rgb[5]=q->b1;
         rgb[6]=q->r2;rgb[7]=q->g2;rgb[8]=q->b2; rgb[9]=q->r3;rgb[10]=q->g3;rgb[11]=q->b3;
-        hostVideoPoly(4,xy,rgb,uv,q->tpage,q->clut); } break;
+        g_cur_abr=(q->tpage>>5)&3; hostVideoPoly(4,xy,rgb,uv,q->tpage,q->clut, abe ? (1 + g_cur_abr) : 0); } break;
     default: break;   /* SPRT/TILE/LINE and others: later */
     }
 }

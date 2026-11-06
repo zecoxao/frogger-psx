@@ -327,8 +327,61 @@ static GLuint get_texture(int tpage, int clut)
     return tex;
 }
 
+/* PSX semi-transparency (ABR) via GL blending. The GL 1.4 core entry points
+ * glBlendEquation and glBlendColor, and the FUNC_ADD / FUNC_REVERSE_SUBTRACT /
+ * CONSTANT_ALPHA enums, may be absent from the legacy SDL_opengl.h header, so
+ * resolve the functions at runtime and define the constants defensively. */
+#ifndef GL_FUNC_ADD
+#define GL_FUNC_ADD 0x8006
+#endif
+#ifndef GL_FUNC_REVERSE_SUBTRACT
+#define GL_FUNC_REVERSE_SUBTRACT 0x800B
+#endif
+#ifndef GL_CONSTANT_ALPHA
+#define GL_CONSTANT_ALPHA 0x8003
+#endif
+#ifndef GL_ONE_MINUS_CONSTANT_ALPHA
+#define GL_ONE_MINUS_CONSTANT_ALPHA 0x8004
+#endif
+typedef void (*PFN_blendeq)(GLenum);
+typedef void (*PFN_blendcol)(GLclampf, GLclampf, GLclampf, GLclampf);
+static PFN_blendeq  p_blend_eq;
+static PFN_blendcol p_blend_col;
+static int          g_blend_loaded;
+
+static void apply_blend(int blend)   /* blend = 0 opaque, else 1 + ABR(0..3) */
+{
+    if (!blend) { glDisable(GL_BLEND); return; }
+    if (!g_blend_loaded) {
+        p_blend_eq  = (PFN_blendeq) SDL_GL_GetProcAddress("glBlendEquation");
+        p_blend_col = (PFN_blendcol)SDL_GL_GetProcAddress("glBlendColor");
+        g_blend_loaded = 1;
+    }
+    glEnable(GL_BLEND);
+    switch (blend - 1) {
+    case 0:  /* 0.5*B + 0.5*F */
+        if (p_blend_eq) p_blend_eq(GL_FUNC_ADD);
+        if (p_blend_col) { p_blend_col(0,0,0,0.5f); glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA); }
+        else glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        break;
+    case 1:  /* B + F (additive) */
+        if (p_blend_eq) p_blend_eq(GL_FUNC_ADD);
+        glBlendFunc(GL_ONE, GL_ONE);
+        break;
+    case 2:  /* B - F (subtractive) */
+        if (p_blend_eq) p_blend_eq(GL_FUNC_REVERSE_SUBTRACT);   /* dst - src */
+        glBlendFunc(GL_ONE, GL_ONE);
+        break;
+    case 3:  /* B + 0.25*F */
+        if (p_blend_eq) p_blend_eq(GL_FUNC_ADD);
+        if (p_blend_col) { p_blend_col(0,0,0,0.25f); glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE); }
+        else glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        break;
+    }
+}
+
 void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
-                   const unsigned char *uv, int tpage, int clut)
+                   const unsigned char *uv, int tpage, int clut, int blend)
 {
     if (!g_win || (n != 3 && n != 4)) return;
     static const int tri3[] = {0,1,2};
@@ -341,11 +394,12 @@ void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
         glBindTexture(GL_TEXTURE_2D, get_texture(tpage, clut));
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.5f);        /* drop transparent texels */
+        glAlphaFunc(GL_GREATER, 0.5f);        /* drop transparent (STP=0,c==0) texels */
     } else {
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_ALPHA_TEST);
     }
+    apply_blend(blend);
     glBegin(GL_TRIANGLES);
     for (i = 0; i < count; ++i) {
         int v = idx[i];
@@ -354,6 +408,7 @@ void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
         glVertex2i(xy[v*2+0], xy[v*2+1]);
     }
     glEnd();
+    if (blend) { glDisable(GL_BLEND); if (p_blend_eq) p_blend_eq(GL_FUNC_ADD); }  /* leave ADD as the resting equation */
 }
 
 extern int port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok;
