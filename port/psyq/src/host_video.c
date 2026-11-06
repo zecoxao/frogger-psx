@@ -37,6 +37,7 @@ static SDL_Window   *g_win;
 static SDL_GLContext g_gl;
 static SDL_GameController *g_pad;
 static int  g_refresh_hz = 60;
+static int  g_fps_override = 0;    /* PORT_FPS / F1 toggle overrides SetVideoMode */
 static int  g_logical_w = 320, g_logical_h = 240;
 static unsigned char g_cr = 0, g_cg = 0, g_cb = 0;
 static Uint64 g_last_present;      /* perf-counter ticks */
@@ -46,6 +47,7 @@ int hostVideoInit(int w, int h)
 {
     if (g_win) return 0; /* already up */
     g_logical_w = w; g_logical_h = h;
+    if (getenv("PORT_FPS")) { g_refresh_hz = atoi(getenv("PORT_FPS")); g_fps_override = 1; }
 
     SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");  /* keep our watchdog/segv handlers */
     /* DualShock 4 / DualSense: enable SDL's HIDAPI PS controller drivers so the
@@ -93,7 +95,7 @@ void hostVideoShutdown(void)
     g_win = NULL; g_gl = NULL; g_pad = NULL;
 }
 
-void hostVideoSetRefresh(int hz) { if (hz > 0) g_refresh_hz = hz; }
+void hostVideoSetRefresh(int hz) { if (hz > 0 && !g_fps_override) g_refresh_hz = hz; }
 void hostVideoSetClear(unsigned char r, unsigned char g, unsigned char b)
 { g_cr = r; g_cg = g; g_cb = b; }
 
@@ -166,6 +168,12 @@ int hostVideoPump(void)
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT) running = 0;
         else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) running = 0;
+        else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F1) {
+            /* cycle the frame-rate cap: 60 -> 120 -> uncapped -> 60 */
+            g_fps_override = 1;
+            g_refresh_hz = (g_refresh_hz == 60) ? 120 : (g_refresh_hz == 120) ? 0 : 60;
+            fprintf(stderr, "[fps] cap = %s\n", g_refresh_hz ? (g_refresh_hz==120?"120":"60") : "uncapped");
+        }
         else if (e.type == SDL_CONTROLLERDEVICEADDED && !g_pad)
             g_pad = SDL_GameControllerOpen(e.cdevice.which);
     }
@@ -335,13 +343,26 @@ void hostVideoPresent(void)
       if (!done && port_cnt_sprt > thr) { host_screenshot(); done=1; } }
     SDL_GL_SwapWindow(g_win);          /* present; frame was cleared by PutDrawEnv */
 
-    const double target = 1.0 / (double)g_refresh_hz;
     Uint64 freq = SDL_GetPerformanceFrequency();
-    double elapsed = (double)(SDL_GetPerformanceCounter() - g_last_present) / freq;
-    if (elapsed < target) {
-        Uint32 ms = (Uint32)((target - elapsed) * 1000.0);
-        if (ms > 33) ms = 33;                 /* never oversleep */
-        if (ms > 0) SDL_Delay(ms);
+    if (g_refresh_hz > 0) {            /* cap to target; 0 = uncapped */
+        double target = 1.0 / (double)g_refresh_hz;
+        double elapsed = (double)(SDL_GetPerformanceCounter() - g_last_present) / freq;
+        if (elapsed < target) {
+            Uint32 ms = (Uint32)((target - elapsed) * 1000.0);
+            if (ms > 33) ms = 33;             /* never oversleep */
+            if (ms > 0) SDL_Delay(ms);
+        }
     }
     g_last_present = SDL_GetPerformanceCounter();
+
+    /* optional actual-fps readout (PORT_FPS_SHOW=1) */
+    if (getenv("PORT_FPS_SHOW")) {
+        static Uint64 t0; static int fr;
+        if (!t0) t0 = SDL_GetPerformanceCounter();
+        if (++fr >= 120) {
+            double dt = (double)(SDL_GetPerformanceCounter() - t0) / freq;
+            fprintf(stderr, "[fps] %.1f (cap %d)\n", fr/dt, g_refresh_hz);
+            fr = 0; t0 = SDL_GetPerformanceCounter();
+        }
+    }
 }

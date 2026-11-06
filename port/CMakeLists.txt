@@ -43,13 +43,29 @@ set(ENGINE_TU
     mr_p_f3 mr_p_f4 mr_p_ft3 mr_p_ft4 mr_p_g3 mr_p_g4 mr_p_gt3 mr_p_gt4
     mr_p_e3 mr_p_e4 mr_p_ge3 mr_p_ge4)
 
+# Resolve TU basenames to real files, matching case-insensitively so the build
+# works whether the source is upper-case (as in the repo, e.g. MAIN.C) or has
+# been lower-cased by setup-linux.sh -- on both case-sensitive and -insensitive
+# filesystems. Build a lower-case-basename -> path map from a directory listing.
 function(resolve_tus out_var dir)
+    file(GLOB _all ${dir}/*)
     set(_acc "")
     foreach(tu ${ARGN})
-        if(EXISTS ${dir}/${tu}.c)
-            list(APPEND _acc ${dir}/${tu}.c)
-        elseif(EXISTS ${dir}/${tu}.C)
-            list(APPEND _acc ${dir}/${tu}.C)
+        set(_found "")
+        foreach(f ${_all})
+            get_filename_component(_ext ${f} LAST_EXT)
+            string(TOLOWER "${_ext}" _extl)
+            if(_extl STREQUAL ".c")
+                get_filename_component(_b ${f} NAME_WE)
+                string(TOLOWER "${_b}" _bl)
+                if(_bl STREQUAL "${tu}")
+                    set(_found ${f})
+                    break()
+                endif()
+            endif()
+        endforeach()
+        if(_found)
+            list(APPEND _acc ${_found})
         else()
             message(WARNING "TU not found: ${tu} in ${dir}")
         endif()

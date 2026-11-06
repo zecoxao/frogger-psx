@@ -1,10 +1,37 @@
-# Frogger PSX → Windows native port (scaffold)
+# Frogger PSX → native PC port
 
-This directory is a **native PC port scaffold** for the Frogger PSX source in the parent
-repo. It is *not* a binary recompilation: the repo already contains the full game source
+A **native PC port** of the Frogger PSX source in the parent repo (32-bit x86, Linux/WSL).
+It is *not* a binary recompilation: the repo already contains the full game source
 (~149k lines) and the Millennium "MR" engine source (`source/API.SRC`, 113 `.C` files), so
-the sane route is to **recompile the C natively** and replace the one blob layer — the
-Sony PsyQ SDK — with a host implementation on SDL2 + OpenGL.
+the route is to **recompile the C natively** and replace the one blob layer — the
+Sony PsyQ SDK — with a host implementation on SDL2 + OpenGL + SDL audio. It boots the real
+game, loads assets from the WAD, renders textured 3D + sprites, takes keyboard / DualShock 4
+input, and plays sound effects.
+
+## Quick start (WSL / Linux)
+
+```bash
+# 1. one-time: 32-bit toolchain (compiler + SDL2/GL) + cmake/ninja
+sudo dpkg --add-architecture i386 && sudo apt update
+sudo apt install -y gcc-multilib cmake ninja-build libsdl2-dev:i386 libgl1-mesa-dev:i386
+
+# 2. build
+./build.sh                       # -> port/build/frogger-pc
+
+# 3. game data: extract FROGPSX.MWD (+ streams) from YOUR OWN game disc backup
+python3 port/tools/extract_iso.py /path/to/Frogger.bin files
+
+# 4. run (reads files/FROGPSX.MWD)
+./run.sh
+```
+
+Controls: **arrows** D-pad · **X** Cross · **C** Circle · **Z** Square · **S** Triangle ·
+**Enter** Start · **RShift** Select · **F1** cycle frame-cap (60/120/uncapped) · **Esc** quit.
+A **DualShock 4 / DualSense** (USB or Bluetooth) works out of the box.
+
+Frame rate: `PORT_FPS=60|120|0` (or F1). Default 60 = normal speed. This is a fixed-timestep
+PSX game, so **120 runs the game ~2× faster** (a turbo, not interpolation); on a 120 Hz
+display at normal speed, keep it at 60. `PORT_FPS_SHOW=1` prints the measured fps.
 
 ```
   game source (source/*.C)        ← unchanged, built with PSX defined

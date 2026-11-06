@@ -60,3 +60,9 @@ stdout.txt
 /sdk/lib/elf/*.LIB
 # PC port build artifacts
 /port/build/
+
+# Extracted game data (copyrighted -- bring your own disc; not distributed)
+/files/
+*.MWD
+*.STR
+*.CDA
