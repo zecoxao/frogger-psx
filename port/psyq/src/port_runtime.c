@@ -151,6 +151,14 @@ static void port_draw_prim(void *p)
         } else if ((code & 0xfc) == 0x60) {          /* TILE (flat rect) */
             TILE *q = (TILE*)p; port_cnt_tile++;
             int x0=q->x0, y0=q->y0, w=q->w, h=q->h, i;
+            /* GAME_CLEAR_USING_TILES clears each viewport by drawing a full-screen
+             * black TILE from a dedicated "clearing viewport" that, on PSX, renders
+             * behind everything. The port drains viewport OTs across several DrawOTag
+             * passes, so that tile's ordering is not preserved and it lands ON TOP of
+             * the map, blanking the whole scene. PutDrawEnv already clears the GL
+             * framebuffer to black every frame, so this tile is redundant: drop it. */
+            if (q->r0==0 && q->g0==0 && q->b0==0 && w>=256 && h>=224)
+                return;
             xy[0]=x0;   xy[1]=y0;    xy[2]=x0+w; xy[3]=y0;
             xy[4]=x0;   xy[5]=y0+h;  xy[6]=x0+w; xy[7]=y0+h;
             for(i=0;i<4;i++){rgb[i*3]=q->r0;rgb[i*3+1]=q->g0;rgb[i*3+2]=q->b0;}
