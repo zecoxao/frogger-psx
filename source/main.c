@@ -200,6 +200,23 @@ MR_VOID	main(MR_VOID)
 
 	Option_page_current = OPTIONS_PAGE_ANTI_PIRACY;
 
+#if !defined(__mips__)
+	// Host-port deterministic drop-into-a-level hook. PORT_LEVEL=<n> skips the
+	// whole menu/attract chain and starts OPTIONS_PAGE_GAME on level <n> directly
+	// (mirrors the non-FROG_OPTIONS dev path below), so gameplay can be observed
+	// reproducibly. Normal (unset) behaviour is unchanged.
+	if (getenv("PORT_LEVEL"))
+		{
+		extern void port_dbgf(const char*, ...);
+		Game_map				= atoi(getenv("PORT_LEVEL"));
+		Game_total_viewports	= 1;
+		Game_total_players		= 1;
+		Option_page_current		= OPTIONS_PAGE_GAME;
+		GameInitialise();
+		port_dbgf("[hook] PORT_LEVEL=%d: drop straight into OPTIONS_PAGE_GAME\n", (int)Game_map);
+		}
+#endif
+
 #ifdef DEBUG
 	// Hiscore view
 	//Option_page_current = OPTIONS_PAGE_MAIN_OPTIONS;

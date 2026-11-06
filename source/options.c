@@ -156,6 +156,9 @@ MR_BOOL	OptionStart(MR_VOID)
 			MRStartGatso();
 #endif
 			// Process page update callback
+#if !defined(__mips__)
+			{ extern int port_cur_page; port_cur_page = Option_page_current; }  /* port: reflect active page each frame */
+#endif
 			if (Option_page_info[Option_page_current].op_callback_update)
 				(Option_page_info[Option_page_current].op_callback_update)();
 
