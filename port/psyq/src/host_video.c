@@ -348,6 +348,7 @@ void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
 
 extern int port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok;
 int port_cur_page;
+int port_map_active;   /* set by RenderMap each frame the level map is drawn */
 static void host_screenshot(void)
 {
     const char *path = getenv("PORT_SHOT"); if (!path) return;
@@ -373,6 +374,20 @@ void hostVideoPresent(void)
     if (!g_win) return;
     { static long fc=0; long want = getenv("PORT_SHOT_FRAME")?atol(getenv("PORT_SHOT_FRAME")):180;
       if (++fc == want) host_screenshot(); }
+    /* PORT_SHOT_ON_PRIMS=N: capture the first frame whose OT drew > N prims */
+    if (getenv("PORT_SHOT_ON_PRIMS")) { static int done=0;
+      if (!done && port_last_prims > atoi(getenv("PORT_SHOT_ON_PRIMS"))) { host_screenshot(); done=1; } }
+    /* PORT_SHOT_ON_MAP=N: capture the Nth frame in which the level map was drawn
+     * (skip early frames to get past LOADING; default 1). */
+    if (getenv("PORT_SHOT_ON_MAP")) { static int done=0; static int mapframes=0;
+      int want = atoi(getenv("PORT_SHOT_ON_MAP")); if (want < 1) want = 1;
+      if (port_map_active) mapframes++;
+      if (!done && mapframes >= want) { host_screenshot(); done=1; } }
+    port_map_active = 0;
+    /* PORT_SHOT_PAGE=0xNN: capture the first frame on that option-page with >200 prims */
+    if (getenv("PORT_SHOT_PAGE")) { static int done=0;
+      int want = (int)strtol(getenv("PORT_SHOT_PAGE"), 0, 0);
+      if (!done && port_cur_page == want && port_last_prims > 200) { host_screenshot(); done=1; } }
     /* PORT_PAGE_SHOW: log the option-page id + prim count whenever it changes */
     if (getenv("PORT_PAGE_SHOW")) { static int last = -999;
         if (port_cur_page != last) {

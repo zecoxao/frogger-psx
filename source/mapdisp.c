@@ -26,6 +26,16 @@
 #include "camera.h"
 #include "water.h"
 
+#if !defined(__mips__)
+// PC port: this TU's include chain pulls in the PSX libgpu.h addPrim (a 24-bit
+// OT linked-list insert) AFTER the port's gtemac.h override, so map primitives
+// would be linked into an OT the host never rasterises. Re-apply the override
+// here so RenderMap's addPrim() records prims through the host OT recorder.
+#undef addPrim
+extern void port_addprim(void *otentry, void *prim);
+#define addPrim(ot, p) port_addprim((void *)(ot), (void *)(p))
+#endif
+
 // Map group creation indices
 MR_SHORT		Map_group_view_list[SYSTEM_MAX_VIEWPORTS][MAP_MAX_POLY_GROUPS + 1];
 
@@ -1113,6 +1123,10 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 		poly_group++;
 		}
 
+#ifndef __mips__
+	{ extern int port_map_active; port_map_active = 1; }   // host: flags that the level map drew this frame
+#endif
+
 	// DEAN:	Changed to pass frog_svec into render code, because otherwise the ASM
 	//			versions of the code would have to duplicate the (huge) FROG structure
 	params->mr_frog_svec.vx		= Frogs[0].fr_lwtrans->t[0];
@@ -1125,7 +1139,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 	params->mr_prim_coord_ofs	= 4;
 	params->mr_prim_flags		= 0;
 
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 12;
@@ -1145,7 +1159,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 	params->mr_prim_size 		= sizeof(POLY_FT3);
 	params->mr_prim_coord_ofs	= 8;
 	params->mr_prim_flags		= MAP_RENDER_FLAGS_TEXTURED;
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 16;
@@ -1169,7 +1183,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 		// Yes ... set cave light
 		params->mr_prim_flags	|= MAP_RENDER_FLAGS_LIT;
 
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 12;
@@ -1194,7 +1208,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 		// Yes ... set cave light
 		params->mr_prim_flags	|= MAP_RENDER_FLAGS_LIT;
 
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 16;
@@ -1213,7 +1227,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 	params->mr_prim_size 		= sizeof(POLY_F4);
 	params->mr_prim_coord_ofs	= 4;
 	params->mr_prim_flags		= 0;
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 12;
@@ -1232,7 +1246,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 	params->mr_prim_size 		= sizeof(POLY_FT4);
 	params->mr_prim_coord_ofs	= 8;
 	params->mr_prim_flags		= MAP_RENDER_FLAGS_TEXTURED;
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 16;
@@ -1257,7 +1271,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 		// Yes ... set cave light
 		params->mr_prim_flags	|= MAP_RENDER_FLAGS_LIT;
 
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 12;
@@ -1281,7 +1295,7 @@ MR_VOID	RenderMap(MR_ULONG	vp_id)
 		// Yes ... set cave light
 		params->mr_prim_flags	|= MAP_RENDER_FLAGS_LIT;
 
-#ifdef PSX	//-psx specific code-------------------------------------------------------
+#ifndef WIN95	//-psx layout: also used by the x86 port (uses PSX POLY structs)--------
 	params->mr_prim_x0_ofs		= 8;
 #else		//-win95 specific code-----------------------------------------------------
 	params->mr_prim_x0_ofs		= 16;
