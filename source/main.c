@@ -208,11 +208,17 @@ MR_VOID	main(MR_VOID)
 	if (getenv("PORT_LEVEL"))
 		{
 		extern void port_dbgf(const char*, ...);
+		extern int port_hook_refresh_pads;
 		Game_map				= atoi(getenv("PORT_LEVEL"));
 		Game_total_viewports	= 1;
 		Game_total_players		= 1;
 		Option_page_current		= OPTIONS_PAGE_GAME;
 		GameInitialise();
+		// The menu flow we skip is what normally primes the "controller present"
+		// cache (UpdateControllerInputFlags). Without it the first in-game frame
+		// sees a cache mismatch and auto-pauses, freezing the camera/view update.
+		// Refresh it (and clear any spurious pause) for the first few frames.
+		port_hook_refresh_pads	= 8;
 		port_dbgf("[hook] PORT_LEVEL=%d: drop straight into OPTIONS_PAGE_GAME\n", (int)Game_map);
 		}
 #endif

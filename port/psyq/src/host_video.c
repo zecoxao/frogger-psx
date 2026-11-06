@@ -359,6 +359,11 @@ void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
 extern int port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok;
 int port_cur_page;
 int port_map_active;   /* set by RenderMap each frame the level map is drawn */
+/* PORT_LEVEL hook: >0 => GameMainloop refreshes the controller-present cache and
+ * clears any spurious pause for this many frames, so the deterministic drop-in
+ * is not auto-paused by the "controller unplugged" check (whose cache is
+ * normally primed by the menu flow the hook skips). */
+int port_hook_refresh_pads;
 static void host_screenshot(void)
 {
     const char *path = getenv("PORT_SHOT"); if (!path) return;

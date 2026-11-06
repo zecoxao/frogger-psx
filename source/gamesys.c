@@ -1469,6 +1469,22 @@ MR_VOID	GameMainloop(MR_VOID)
 	FROG*			frog;
 	MR_LONG			counter;			// Number of logic frames to process
 
+#if !defined(__mips__)
+	{
+		// PORT_LEVEL drop-in: prime the controller-present cache (which the
+		// skipped menu flow would have set) and clear any spurious auto-pause,
+		// before CheckJoyPadStillPresent runs below. One-shot over a few frames.
+		extern int port_hook_refresh_pads;
+		extern void UpdateControllerInputFlags(void);
+		if (port_hook_refresh_pads > 0)
+			{
+			UpdateControllerInputFlags();
+			Game_flags &= ~GAME_FLAG_PAUSED;
+			port_hook_refresh_pads--;
+			}
+	}
+#endif
+
 #ifdef WIN95
 	// We need to wait at this point (its virtually the start of a frame, as near
 	// as dammit) for all machines to be happy that they are on this frame of the
