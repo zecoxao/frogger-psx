@@ -48,6 +48,11 @@ int hostVideoInit(int w, int h)
     g_logical_w = w; g_logical_h = h;
 
     SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");  /* keep our watchdog/segv handlers */
+    /* DualShock 4 / DualSense: enable SDL's HIDAPI PS controller drivers so the
+     * pad is recognised over USB and Bluetooth with correct button mapping. */
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "1");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
         fprintf(stderr, "[host] SDL_Init failed: %s\n", SDL_GetError());
         return -1;
@@ -143,6 +148,14 @@ static unsigned long controller_bits(void)
     if (SDL_GameControllerGetButton(c, SDL_CONTROLLER_BUTTON_Y))          b |= PB_TRI;
     if (SDL_GameControllerGetButton(c, SDL_CONTROLLER_BUTTON_LEFTSHOULDER))  b |= PB_L1;
     if (SDL_GameControllerGetButton(c, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) b |= PB_R1;
+    /* triggers (DS4 L2/R2 are axes) */
+    if (SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_TRIGGERLEFT)  > 8000) b |= PB_L2;
+    if (SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > 8000) b |= PB_R2;
+    /* left analog stick -> D-pad (so stick works for movement) */
+    { int ax = SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_LEFTX);
+      int ay = SDL_GameControllerGetAxis(c, SDL_CONTROLLER_AXIS_LEFTY);
+      if (ax < -12000) b |= PB_LEFT; else if (ax > 12000) b |= PB_RIGHT;
+      if (ay < -12000) b |= PB_UP;   else if (ay > 12000) b |= PB_DOWN; }
     return b;
 }
 

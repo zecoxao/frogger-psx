@@ -139,10 +139,11 @@ void SsSetMVol(int l, int r) { g_mvol = ((l>r?l:r) / 127.0f); if (g_mvol>1) g_mv
 void SpuInit(void) {}
 void SpuSetCommonMasterVolume(short l, short r) { (void)l;(void)r; }
 
-/* VAB header offsets (fixed layout). */
+/* VAB header layout: VabHdr(32) + ProgAtr[128](2048) + VagAtr[16*ps](32 each)
+ * + VagOffset[256](512). The VagAtr block is sized by ps (program count), so
+ * the VAG offset table offset is computed from the header, not fixed. */
 #define VH_PROG_OFF   32
 #define VH_TONE_OFF   (32 + 128*16)
-#define VH_VAGTAB_OFF (VH_TONE_OFF + 128*16*32)
 static unsigned short rd16(const unsigned char *p){ return p[0] | (p[1]<<8); }
 
 static int g_vh_vag[16][257];        /* cached VAG offset table per vab */
@@ -154,7 +155,9 @@ short SsVabOpenHead(unsigned char *vh, short vabid)
     if (id < 0 || !vh) return -1;
     Vab *V = &g_vab[id];
     memset(V, 0, sizeof *V); V->used = 1;
-    const unsigned char *vagtab = vh + VH_VAGTAB_OFF;
+    int ps = rd16(vh + 18);                         /* program count */
+    if (ps < 1 || ps > 128) ps = 128;
+    const unsigned char *vagtab = vh + VH_TONE_OFF + ps*16*32;
     for (i = 0; i < 256; ++i) g_vh_vag[id][i] = rd16(vagtab + i*2);
     for (p = 0; p < 128; ++p)
         for (t = 0; t < 16; ++t) {
@@ -178,15 +181,17 @@ short SsVabTransBody(unsigned char *vb, short vabid)
      * sum of VAG sizes in the offset table. */
     int total = 0, i;
     for (i = 1; i < 256; ++i) total += g_vh_vag[vabid][i] * 8;
-    if (total <= 0 || total > SPU_RAM_SZ - spu_top) total = SPU_RAM_SZ - spu_top;
-    memcpy(&spu_ram[spu_top], vb, total);
+    if (total < 0) total = 0;
+    if (total > SPU_RAM_SZ - spu_top) total = SPU_RAM_SZ - spu_top;
+    if (total > 0) memcpy(&spu_ram[spu_top], vb, total);
     /* resolve each tone's VAG (1-based) to an absolute SPU-RAM address */
     int cum[257]; cum[0] = 0;
     for (i = 1; i < 257; ++i) cum[i] = cum[i-1] + g_vh_vag[vabid][i-1]*8;
     int p, t;
     for (p = 0; p < 128; ++p) for (t = 0; t < 16; ++t) {
-        int vag = V->tone[p][t].addr;                  /* 1-based */
-        V->tone[p][t].addr = (vag >= 1) ? (V->base + cum[vag-1]) : -1;
+        int vag = V->tone[p][t].addr;                  /* 1-based VAG index */
+        /* unused tone slots hold garbage: bound before indexing cum[] */
+        V->tone[p][t].addr = (vag >= 1 && vag <= 256) ? (V->base + cum[vag-1]) : -1;
     }
     spu_top += total;
     fprintf(stderr, "[audio] VAB %d loaded: %d bytes at SPU 0x%x\n", vabid, total, V->base);

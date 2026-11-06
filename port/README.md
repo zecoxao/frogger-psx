@@ -126,6 +126,9 @@ The game now draws recognisable Frogger geometry (lily pads, effects, UI).
 
   Controls: **arrows** = D-pad, **Enter** = Start, **RShift** = Select, **X** = Cross,
   **C** = Circle, **Z** = Square, **S** = Triangle. Esc / window-close quits.
+  **DualShock 4 / DualSense** work via SDL's HIDAPI PS drivers (USB or Bluetooth): face
+  buttons map to Cross/Circle/Square/Triangle, D-pad and left stick both move, L2/R2
+  triggers and shoulders are mapped.
 
 Verified: input is delivered (`InitTAP` ran, buffer filled every frame). Reaching the full
 in-game HUD to see it needs interactive play — the attract loop stays on the menu, and
@@ -136,17 +139,20 @@ scripted/headless input can't reliably navigate menus.
 the first frame drawing > N sprites; `PORT_AUTO=1` pulses menu-confirm buttons;
 `PORT_WATCHDOG=sec` arms a backtrace alarm.
 
-### Sound effects (implemented — SPU on SDL audio)
+### Sound effects (WORKING — SPU on SDL audio)
 `port_audio.c` implements the libsnd `Ss*` layer the MR engine drives:
 * a 512 KB "SPU RAM" that VAB bodies are copied into (`SsVabTransBody`),
-* VAB-header parsing (`SsVabOpenHead`) -> program/tone -> sample address + centre note,
+* VAB-header parsing (`SsVabOpenHead`) -> program/tone -> sample address + centre note.
+  NB: the VagAtr block is sized by the header's program count (`16*ps`), so the VAG
+  offset table position is computed from `ps`, not a fixed 128-program layout,
 * **PSX 4-bit ADPCM** decode (to PCM on key-on), and a 24-voice mixer that resamples by
   pitch and sums to an SDL audio stream (`SsUtKeyOnV/KeyOffV/SetVVol/ChangePitch`,
   `SpuGetAllKeysStatus`).
-The audio device opens at boot (`[audio] SDL audio up`). As with the HUD, the menu/attract
-doesn't trigger SFX (those play in-game), so sound is exercised during gameplay.
+Verified: the boot/anti-piracy screen loads its VAB (280 KB) and triggers voices; the
+captured mix is non-silent (peak ~18.7k/32k, RMS ~2.8k). `PORT_AUDIO_DUMP=path` saves the
+raw s16 stereo mix; `port/tools/analyze_audio.py` reports level.
 FIRST CUT: pitch uses a 2^((note-centre)/12) approximation and ADSR is a simplified
-gate+release, so timbre may be slightly off. `PORT_AUDIO_DUMP=path` saves the raw mix.
+gate+release, so timbre may be slightly off. Music is XA/CD-streamed and still stubbed.
 
 ### Remaining (by dependency)
 * Confirm interactive menu navigation reaches gameplay (then HUD + SFX are exercised).
