@@ -209,7 +209,19 @@ MR_VOID	main(MR_VOID)
 		{
 		extern void port_dbgf(const char*, ...);
 		extern int port_hook_refresh_pads;
-		Game_map				= atoi(getenv("PORT_LEVEL"));
+		MR_LONG port_lvl = atoi(getenv("PORT_LEVEL"));
+		// Reject levels with no map data before they crash the loader. Some enum
+		// slots are stubbed in Map_library[] with mb_map_res_id == 0 (the cut RUINS
+		// theme, LEVEL_ISLAND/LEVEL_QB test maps); loading resource 0 yields a
+		// garbage MAP_HEADER and InitialiseMap->ResolveMapForms segfaults. Also
+		// bound-check the index so an out-of-range PORT_LEVEL cannot walk off
+		// Map_library[]. On rejection, fall through to the normal menu flow.
+		if (port_lvl < 0 || port_lvl > LEVEL_QB || Map_library[port_lvl].mb_map_res_id == 0)
+			{
+			port_dbgf("[hook] PORT_LEVEL=%d has no map data (stubbed/out-of-range); ignoring, starting menu.\n", (int)port_lvl);
+			goto port_level_done;
+			}
+		Game_map				= port_lvl;
 		Game_total_viewports	= 1;
 		Game_total_players		= 1;
 		Option_page_current		= OPTIONS_PAGE_GAME;
@@ -220,6 +232,7 @@ MR_VOID	main(MR_VOID)
 		// Refresh it (and clear any spurious pause) for the first few frames.
 		port_hook_refresh_pads	= 8;
 		port_dbgf("[hook] PORT_LEVEL=%d: drop straight into OPTIONS_PAGE_GAME\n", (int)Game_map);
+		port_level_done:;
 		}
 #endif
 
