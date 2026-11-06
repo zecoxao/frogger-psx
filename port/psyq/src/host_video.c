@@ -221,6 +221,16 @@ int hostVideoPump(void)
         if (port_cur_page == 0x8 && atoi(getenv("PORT_AUTO")) >= 2 &&
             page_frames >= 120 && (page_frames % 90) < 4)
             autob |= PB_CROSS;
+        /* 0x10 = title/high-score "START RACE": tap Cross to begin. */
+        if (port_cur_page == 0x10 && atoi(getenv("PORT_AUTO")) >= 2 &&
+            page_frames >= 90 && (page_frames % 90) < 4)
+            autob |= PB_CROSS;
+        /* PORT_AUTO=3: once in gameplay (any other populated page), tap Up to
+         * hop the frog forward so it doesn't idle-timeout back to the menu. */
+        if (atoi(getenv("PORT_AUTO")) >= 3 &&
+            port_cur_page != 0x6 && port_cur_page != 0x8 && port_cur_page != 0xb &&
+            port_cur_page != 0x10 && (pf % 45) < 3)
+            autob |= PB_UP;
     }
     g_pad_bits = controller_bits() | keyboard_bits() | autob;
     return running;
@@ -384,10 +394,15 @@ void hostVideoPresent(void)
       if (port_map_active) mapframes++;
       if (!done && mapframes >= want) { host_screenshot(); done=1; } }
     port_map_active = 0;
-    /* PORT_SHOT_PAGE=0xNN: capture the first frame on that option-page with >200 prims */
-    if (getenv("PORT_SHOT_PAGE")) { static int done=0;
+    /* PORT_SHOT_PAGE=0xNN: capture a frame on that option-page with >200 prims.
+     * PORT_SHOT_PAGE_SKIP=N skips the first N matching frames (lets the intro
+     * camera swoop settle before capturing). */
+    if (getenv("PORT_SHOT_PAGE")) { static int done=0, seen=0;
       int want = (int)strtol(getenv("PORT_SHOT_PAGE"), 0, 0);
-      if (!done && port_cur_page == want && port_last_prims > 200) { host_screenshot(); done=1; } }
+      int skip = getenv("PORT_SHOT_PAGE_SKIP") ? atoi(getenv("PORT_SHOT_PAGE_SKIP")) : 0;
+      int minp = getenv("PORT_SHOT_PAGE_MIN") ? atoi(getenv("PORT_SHOT_PAGE_MIN")) : 200;
+      if (!done && port_cur_page == want && port_last_prims > minp) {
+          if (seen++ >= skip) { host_screenshot(); done=1; } } }
     /* PORT_PAGE_SHOW: log the option-page id + prim count whenever it changes */
     if (getenv("PORT_PAGE_SHOW")) { static int last = -999;
         if (port_cur_page != last) {
