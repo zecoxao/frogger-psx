@@ -138,8 +138,16 @@ static void gte_project(short vx, short vy, short vz, short *osx, short *osy, lo
     long z =((long)g_rot.m[2][0]*vx+(long)g_rot.m[2][1]*vy+(long)g_rot.m[2][2]*vz)>>SH;
     x += g_tx; y += g_ty; z += g_tz;
     if (z < 1) z = 1;                       /* avoid div0 / behind camera */
-    *osx = (short)(g_ofx + x * g_h / z);
-    *osy = (short)(g_ofy + y * g_h / z);
+    {   /* PSX GTE saturates screen XY to [-0x400,0x3ff] (sets FLAG) rather than
+         * wrapping. Without this, polys straddling the near plane overflow the
+         * (short) cast and wrap to garbage coords, drawing huge junk quads. */
+        long sx = g_ofx + x * g_h / z;
+        long sy = g_ofy + y * g_h / z;
+        if (sx < -0x400) sx = -0x400; else if (sx > 0x3ff) sx = 0x3ff;
+        if (sy < -0x400) sy = -0x400; else if (sy > 0x3ff) sy = 0x3ff;
+        *osx = (short)sx;
+        *osy = (short)sy;
+    }
     *oz  = z;
 }
 

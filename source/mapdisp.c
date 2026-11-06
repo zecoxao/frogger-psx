@@ -621,7 +621,7 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 					setSemiTrans((POLY_FT3*)prims0, 1);
 					setSemiTrans((POLY_FT3*)prims1, 1);
 					}
-#ifdef PSX
+#ifndef WIN95	//-psx layout: 32-bit copies carry clut (with u0) and tpage (with u1); also used by the x86 port
 				MR_COPY32(((POLY_FT3*)prims0)->u0, ((MAP_FT3*)mpoly)->mp_u0);
 				MR_COPY32(((POLY_FT3*)prims0)->u1, ((MAP_FT3*)mpoly)->mp_u1);
 				MR_COPY32(((POLY_FT3*)prims1)->u0, ((MAP_FT3*)mpoly)->mp_u0);
@@ -684,7 +684,7 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 					setSemiTrans((POLY_FT4*)prims0, 1);
 					setSemiTrans((POLY_FT4*)prims1, 1);
 					}
-#ifdef PSX
+#ifndef WIN95	//-psx layout: 32-bit copies carry clut (with u0) and tpage (with u1); also used by the x86 port
 				MR_COPY32(((POLY_FT4*)prims0)->u0, ((MAP_FT4*)mpoly)->mp_u0);
 				MR_COPY32(((POLY_FT4*)prims0)->u1, ((MAP_FT4*)mpoly)->mp_u1);
 				MR_COPY32(((POLY_FT4*)prims1)->u0, ((MAP_FT4*)mpoly)->mp_u0);
@@ -823,7 +823,7 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 					setSemiTrans((POLY_GT3*)prims0, 1);
 					setSemiTrans((POLY_GT3*)prims1, 1);		
 					}
-#ifdef PSX
+#ifndef WIN95	//-psx layout: 32-bit copies carry clut (with u0) and tpage (with u1); also used by the x86 port
 				MR_COPY32(((POLY_GT3*)prims0)->u0, ((MAP_GT3*)mpoly)->mp_u0);
 				MR_COPY32(((POLY_GT3*)prims0)->u1, ((MAP_GT3*)mpoly)->mp_u1);
 				MR_COPY32(((POLY_GT3*)prims1)->u0, ((MAP_GT3*)mpoly)->mp_u0);
@@ -884,7 +884,7 @@ MR_LONG	ExpandMapGroup(	MR_SHORT	index,
 					setSemiTrans((POLY_GT4*)prims0, 1);
 					setSemiTrans((POLY_GT4*)prims1, 1);	
 					}
-#ifdef PSX
+#ifndef WIN95	//-psx layout: 32-bit copies carry clut (with u0) and tpage (with u1); also used by the x86 port
 				MR_COPY32(((POLY_GT4*)prims0)->u0, ((MAP_GT4*)mpoly)->mp_u0);
 				MR_COPY32(((POLY_GT4*)prims0)->u1, ((MAP_GT4*)mpoly)->mp_u1);
 				MR_COPY32(((POLY_GT4*)prims1)->u0, ((MAP_GT4*)mpoly)->mp_u0);
