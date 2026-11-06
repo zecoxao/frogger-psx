@@ -23,13 +23,23 @@ static MATRIX g_rot;
 static long   g_tx, g_ty, g_tz;     /* SetTransMatrix */
 static long   g_ofx, g_ofy, g_h;    /* SetGeomOffset / SetGeomScreen */
 
-void InitGeom(void) { g_tx=g_ty=g_tz=0; g_ofx=g_ofy=0; g_h=1000; }
+/* ---- dynamic lighting (GTE normal-colour ops) ---- */
+static MATRIX g_lightm;             /* SetLightMatrix: rows = light directions (1.3.12) */
+static MATRIX g_colorm;             /* SetColorMatrix: m[channel][light] = lightcolour<<4 */
+static long   g_bk[3];              /* SetBackColor: ambient RGB (0..255) */
+static int    g_light_on = -1;      /* enabled? (env PORT_LIGHT, cached) */
+
+void InitGeom(void) { g_tx=g_ty=g_tz=0; g_ofx=g_ofy=0; g_h=1000;
+    /* Neutral full ambient until the engine configures lighting per mesh, so a
+     * mesh drawn before any SetBackColor/SetColorMatrix renders at its material
+     * colour rather than black. */
+    g_bk[0]=g_bk[1]=g_bk[2]=255; }
 
 void SetRotMatrix(MATRIX *m)   { g_rot = *m; }
 void SetTransMatrix(MATRIX *m) { g_tx=m->t[0]; g_ty=m->t[1]; g_tz=m->t[2]; }
 void SetGeomOffset(long x, long y) { g_ofx=x; g_ofy=y; }
 void SetGeomScreen(long h) { g_h=h; }
-void SetBackColor(long r,long g,long b){ (void)r;(void)g;(void)b; }
+void SetBackColor(long r,long g,long b){ g_bk[0]=r; g_bk[1]=g; g_bk[2]=b; }
 void SetFarColor(long r,long g,long b){ (void)r;(void)g;(void)b; }
 void SetFogNearFar(long a,long b,long h){ (void)a;(void)b;(void)h; }
 
@@ -193,17 +203,45 @@ void gte_avsz4(void){ g_otz = (g_sz[0]+g_sz[1]+g_sz[2]+g_sz[3])/4; }
 
 void gte_ldrgb(CVECTOR *c){ g_r=c->r; g_gg=c->g; g_b=c->b; g_cd=c->cd; }
 void gte_strgb(CVECTOR *c){ c->r=g_r; c->g=g_gg; c->b=g_b; }   /* cd/code left as set */
-void gte_ncds(void){}   /* lighting: pass loaded colour through (no dynamic light yet) */
-void gte_nccs(void){}
+
+/* Flat dynamic lighting from one surface normal. Models the GTE normal-colour
+ * pipeline (NCDS/NCCS) as: per-light intensity L[i]=clamp(dir_i . N), accumulated
+ * colour acc[c]=ambient + sum_i(colour[c][i]*L[i]), then material*acc. Shading is
+ * per-polygon (from the first loaded normal) rather than true per-vertex gouraud,
+ * which would need a colour FIFO matched to the SXY FIFO ordering. The current
+ * loaded RGB (g_r/g_gg/g_b) is the material and is overwritten with the result. */
+static void gte_light_apply(short nx, short ny, short nz)
+{
+    if (g_light_on < 0) g_light_on = getenv("PORT_NOLIGHT") ? 0 : 1;
+    if (!g_light_on) return;                     /* PORT_NOLIGHT: keep loaded RGB (flat) */
+    long mat[3] = { g_r, g_gg, g_b };
+    long L[3];
+    int i, c;
+    for (i = 0; i < 3; ++i) {
+        long d = ((long)g_lightm.m[i][0]*nx + (long)g_lightm.m[i][1]*ny + (long)g_lightm.m[i][2]*nz) >> SH;
+        if (d < 0) d = 0; else if (d > 0x7fff) d = 0x7fff;
+        L[i] = d;
+    }
+    for (c = 0; c < 3; ++c) {
+        long acc = ((long)g_colorm.m[c][0]*L[0] + (long)g_colorm.m[c][1]*L[1] + (long)g_colorm.m[c][2]*L[2]) >> SH;
+        acc += (g_bk[c] << 4);                   /* ambient 0..255 -> 0..4080 (~ONE) */
+        if (acc < 0) acc = 0; else if (acc > GTE_ONE) acc = GTE_ONE;
+        long out = (mat[c] * acc) >> SH;          /* material * intensity(0..ONE) */
+        if (out > 255) out = 255; else if (out < 0) out = 0;
+        if (c == 0) g_r = (unsigned char)out; else if (c == 1) g_gg = (unsigned char)out; else g_b = (unsigned char)out;
+    }
+}
+void gte_ncds(void){ gte_light_apply(g_vx[0], g_vy[0], g_vz[0]); }   /* single: light from V0 normal */
+void gte_nccs(void){ gte_light_apply(g_vx[0], g_vy[0], g_vz[0]); }   /* (no depth-cue variant; same here) */
 /* Store MAC3 (non-limited view-space Z) from the preceding gte_rtps. The MR
  * local-OT path (MRStaticDisplayMeshInstance) uses this as the mesh origin's
  * view z to place its OT; stubbing it to 0 made every such mesh fail the
  * "i < MR_OT_NEAR_CLIP" test and vanish (e.g. the select-level preview cubes). */
 void gte_stlvnl2(long *p){ *p = g_sz[3]; }
 
-/* Lighting/colour matrix setters -- no-ops until lighting is implemented. */
-void gte_SetColorMatrix(MATRIX *m){ (void)m; }
-void gte_SetLightMatrix(MATRIX *m){ (void)m; }
+/* Lighting/colour matrix setters. */
+void gte_SetColorMatrix(MATRIX *m){ g_colorm = *m; }
+void gte_SetLightMatrix(MATRIX *m){ g_lightm = *m; }
 void gte_MulMatrix0(void){}
 
 /* ---- gouraud / lighting / env-map ops ----
@@ -211,8 +249,8 @@ void gte_MulMatrix0(void){}
  * the per-type store ops just copy screen xy / RGB into the right prim layout. */
 void gte_rtv0(SVECTOR *v){ (void)v; }        /* rotate normal: unused w/o lighting */
 void gte_stlvnl(long *p){ if (p) *p = ONE; } /* local-vector normal length */
-void gte_ncdt(void){}   /* 3-vertex colour from normals: keep loaded RGB */
-void gte_ncct(void){}
+void gte_ncdt(void){ gte_light_apply(g_vx[0], g_vy[0], g_vz[0]); }   /* flat: light from the first of the 3 normals */
+void gte_ncct(void){ gte_light_apply(g_vx[0], g_vy[0], g_vz[0]); }
 
 static void put3rgb(unsigned char *r0,unsigned char *g0,unsigned char *b0,int stride,int n)
 { int i; for(i=0;i<n;i++){ r0[i*stride]=g_r; g0[i*stride]=g_gg; b0[i*stride]=g_b; } }
