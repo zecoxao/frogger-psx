@@ -11,9 +11,15 @@
 
 /* ---- GTE register ops are implemented for real in port_gte.c ---- */
 /* MRDisplayMeshPolys_* are now the real C emitters (MR_P_*.C). */
-/* ---- MR asm routines still stubbed (quaternion / map render / depack) ---- */
-void MRQuaternionToMatrixASM(){}  void MRQuaternionBToMatrixASM(){}
-void MRInterpolateQuaternionsASM(){} void MRInterpolateQuaternionsBToMatrixASM(){}
+/* ---- MR asm routines: forward the quaternion ones to their C equivalents
+ * (same signatures, in mr_quat.c) so spinning models rotate instead of
+ * collapsing to a zero matrix. Map render uses the C path (see mapdisp.h). ---- */
+void MRQuaternionToMatrix(); void MRQuaternionBToMatrix();
+void MRInterpolateQuaternions(); void MRInterpolateQuaternionsBToMatrix();
+void MRQuaternionToMatrixASM(void *q, void *m){ MRQuaternionToMatrix(q, m); }
+void MRQuaternionBToMatrixASM(void *q, void *m){ MRQuaternionBToMatrix(q, m); }
+void MRInterpolateQuaternionsASM(void *s, void *e, void *d, unsigned t){ MRInterpolateQuaternions(s, e, d, t); }
+void MRInterpolateQuaternionsBToMatrixASM(void *s, void *e, void *m, unsigned t){ MRInterpolateQuaternionsBToMatrix(s, e, m, t); }
 void MapRenderTrisASM(){} void MapRenderQuadsASM(){}
 void MRPPDecrunchBuffer(){}
 

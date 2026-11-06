@@ -13,6 +13,6 @@
 #ifndef		__MR_ALL_TEMP_H
 #define		__MR_ALL_TEMP_H
 
-#include        "api.src/mr_all.h"
+#include        "API.SRC/mr_all.h"
 
 #endif		//__MR_ALL_TEMP_H

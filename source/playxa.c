@@ -375,6 +375,14 @@ MR_VOID	XAUpdate(MR_VOID)
 	if (xa_command_count == 0)
 		return;
 
+#ifndef __mips__
+	// PC port: XA/CD-streamed music is not implemented, and the command queue is
+	// normally drained by CD completion callbacks which never fire on the host.
+	// Drain it here so waiters (e.g. XAShutdown's loop) don't spin forever.
+	xa_command_count = 0;
+	return;
+#endif
+
 	// Act on the last command status
 	if (xa_command_status == XACOMSTAT_RETRY_COMMAND)
 		{

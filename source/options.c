@@ -198,6 +198,8 @@ MR_BOOL	OptionStart(MR_VOID)
 #endif
 			}
 
+		{ extern int port_cur_page; port_cur_page = Option_page_current; }  /* port debug */
+
 		// Process page shutdown callback
 		if (Option_page_info[Option_page_current].op_callback_shutdown)
 			(Option_page_info[Option_page_current].op_callback_shutdown)();

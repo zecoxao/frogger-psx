@@ -31,7 +31,9 @@ typedef	struct	__mr_quatb		MR_QUATB;
 // Defines
 //------------------------------------------------------------------------------------------------
 
-#define	MR_GTE_QUAT_SPEEDUPS		// This enables GTE implementation on PlayStation
+#ifdef __mips__
+#define	MR_GTE_QUAT_SPEEDUPS		// Real PlayStation uses the GTE/asm quaternion path
+#endif										// (PC port compiles + uses the C MRQuaternion* code)
 
 #ifdef	MR_GTE_QUAT_SPEEDUPS
 #define	MR_QUAT_TO_MAT(q,m)			   			MRQuaternionToMatrixASM(q,m)

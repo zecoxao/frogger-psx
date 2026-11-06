@@ -12,6 +12,25 @@
 #include <execinfo.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/mman.h>
+
+/* The PSX runs entirely from writable RAM, so the game freely writes into what
+ * the C compiler puts in read-only .rodata (e.g. string literals it edits in
+ * place). On Linux those pages are read-only and such writes segfault. Emulate
+ * the console by making the process's read-only data pages writable at startup. */
+__attribute__((constructor)) static void port_unprotect_rodata(void)
+{
+    FILE *f = fopen("/proc/self/maps", "r");
+    if (!f) return;
+    char line[512];
+    while (fgets(line, sizeof line, f)) {
+        unsigned long a, b; char perms[8] = {0};
+        if (sscanf(line, "%lx-%lx %7s", &a, &b, perms) == 3 &&
+            perms[0] == 'r' && perms[1] == '-' && perms[2] == '-')
+            mprotect((void*)a, b - a, PROT_READ | PROT_WRITE);  /* best effort */
+    }
+    fclose(f);
+}
 
 /* Temporary crash diagnostics: print a backtrace on SIGSEGV so we can see
  * where the stubbed runtime first falls over. Auto-installed at startup. */
@@ -31,6 +50,14 @@ __attribute__((constructor)) static void port_install_segv(void)
     signal(SIGBUS, port_segv);
     signal(SIGALRM, port_segv);   /* watchdog: dump where we are after N sec */
     if (getenv("PORT_WATCHDOG")) alarm((unsigned)atoi(getenv("PORT_WATCHDOG")));
+}
+
+/* Host debug printf usable from game TUs whose -include stdio.h resolves to the
+ * PsyQ stub (no stderr/fprintf). Declared there as `extern void port_dbgf(...)`. */
+#include <stdarg.h>
+void port_dbgf(const char *fmt, ...)
+{
+    va_list a; va_start(a, fmt); vfprintf(stderr, fmt, a); va_end(a);
 }
 
 static SDL_Window   *g_win;
@@ -180,12 +207,20 @@ int hostVideoPump(void)
     /* PSX pad bits are active-low in PadRead; the game inverts. We hand out
      * the pressed-bit set and invert in PadRead(). */
     unsigned long autob = 0;
-    if (getenv("PORT_AUTO")) {           /* scripted input to reach gameplay */
-        static long pf = 0; long f = (pf++) % 90;
-        /* pulse START, then CROSS, then CIRCLE -- whichever confirms the menu */
-        if (f < 6)        autob |= PB_START;
-        else if (f < 30)  autob |= PB_CROSS;
-        else if (f < 54)  autob |= PB_CIRCLE;
+    if (getenv("PORT_AUTO")) {           /* page-aware path into a level */
+        extern int port_cur_page; static long pf = 0; pf++;
+        static int last_page = -1, page_frames = 0;
+        if (port_cur_page != last_page) { last_page = port_cur_page; page_frames = 0; }
+        else page_frames++;
+        /* 0x6 = main menu: tap Cross ~every 2.5s to advance into level select. */
+        if (port_cur_page == 0x6 && (pf % 150) < 5)
+            autob |= PB_CROSS;
+        /* 0x8 = select level: after settling, tap Cross periodically to confirm
+         * the highlighted level and drop into gameplay. PORT_AUTO=2 enables this
+         * leg; PORT_AUTO=1 stays on select-level. */
+        if (port_cur_page == 0x8 && atoi(getenv("PORT_AUTO")) >= 2 &&
+            page_frames >= 120 && (page_frames % 90) < 4)
+            autob |= PB_CROSS;
     }
     g_pad_bits = controller_bits() | keyboard_bits() | autob;
     return running;
@@ -312,11 +347,12 @@ void hostVideoPoly(int n, const int *xy, const unsigned char *rgb,
 }
 
 extern int port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok;
+int port_cur_page;
 static void host_screenshot(void)
 {
     const char *path = getenv("PORT_SHOT"); if (!path) return;
-    fprintf(stderr, "[host] prims=%d sprt=%d tile=%d tpage=%d  tap_init=%d\n",
-            port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok);
+    fprintf(stderr, "[host] prims=%d sprt=%d tile=%d tpage=%d  tap_init=%d page=0x%x\n",
+            port_last_prims, port_cnt_sprt, port_cnt_tile, port_cnt_tpage, port_tap_ok, port_cur_page);
     int ww, hh; SDL_GL_GetDrawableSize(g_win, &ww, &hh);
     unsigned char *px = (unsigned char*)malloc((size_t)ww*hh*3);
     if (!px) return;
@@ -337,6 +373,13 @@ void hostVideoPresent(void)
     if (!g_win) return;
     { static long fc=0; long want = getenv("PORT_SHOT_FRAME")?atol(getenv("PORT_SHOT_FRAME")):180;
       if (++fc == want) host_screenshot(); }
+    /* PORT_PAGE_SHOW: log the option-page id + prim count whenever it changes */
+    if (getenv("PORT_PAGE_SHOW")) { static int last = -999;
+        if (port_cur_page != last) {
+            fprintf(stderr, "[page] 0x%x (prims=%d sprt=%d)\n", port_cur_page, port_last_prims, port_cnt_sprt);
+            last = port_cur_page;
+        }
+    }
     /* PORT_SHOT_ON_SPRITE=N: capture the first frame drawing > N sprites */
     if (getenv("PORT_SHOT_ON_SPRITE")) { static int done=0;
       int thr = atoi(getenv("PORT_SHOT_ON_SPRITE"));

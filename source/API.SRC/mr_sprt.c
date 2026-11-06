@@ -988,10 +988,19 @@ MR_VOID	MRProcessSpriteAnim(MR_SP_CORE* core_ptr)
 		if (core_ptr->sc_alist_count == 0)
 			{
 			do	{
-				// Execute the next command 
+				// Execute the next command
+#ifndef __mips__
+				/* PC port: guard a corrupt/garbage anim opcode so one bad sprite
+				 * can't crash the whole frame via a wild function pointer. */
+				if (!core_ptr->sc_alist_addr) break;
+				{ MR_ULONG _op = *(core_ptr->sc_alist_addr + core_ptr->sc_alist_pc);
+				  if (_op >= sizeof(MRSprt_functions)/sizeof(MRSprt_functions[0])) break;
+				  pa_fetch_next_instruction = (*MRSprt_functions[_op])(core_ptr); }
+#else
 				pa_fetch_next_instruction = (*MRSprt_functions[*(core_ptr->sc_alist_addr + core_ptr->sc_alist_pc)])(core_ptr);
+#endif
 
-				// Reset the counter again... 
+				// Reset the counter again...
 				core_ptr->sc_alist_count = core_ptr->sc_alist_speed;
 				} while (pa_fetch_next_instruction);
 			}

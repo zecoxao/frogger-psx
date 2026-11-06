@@ -187,7 +187,11 @@ void gte_ldrgb(CVECTOR *c){ g_r=c->r; g_gg=c->g; g_b=c->b; g_cd=c->cd; }
 void gte_strgb(CVECTOR *c){ c->r=g_r; c->g=g_gg; c->b=g_b; }   /* cd/code left as set */
 void gte_ncds(void){}   /* lighting: pass loaded colour through (no dynamic light yet) */
 void gte_nccs(void){}
-void gte_stlvnl2(long *p){ (void)p; }
+/* Store MAC3 (non-limited view-space Z) from the preceding gte_rtps. The MR
+ * local-OT path (MRStaticDisplayMeshInstance) uses this as the mesh origin's
+ * view z to place its OT; stubbing it to 0 made every such mesh fail the
+ * "i < MR_OT_NEAR_CLIP" test and vanish (e.g. the select-level preview cubes). */
+void gte_stlvnl2(long *p){ *p = g_sz[3]; }
 
 /* Lighting/colour matrix setters -- no-ops until lighting is implemented. */
 void gte_SetColorMatrix(MATRIX *m){ (void)m; }

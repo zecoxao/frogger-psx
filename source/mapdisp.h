@@ -27,9 +27,9 @@
 //#define	MAP_WIREFRAME_EXTENSION
 #define	MAP_WATER_WIBBLE
 #define	MAP_TEXTURE_ANIMATION
-#ifdef	PSX
-#define	MAP_USE_ASM										// Only PlayStation uses MIPS terrain code
-#endif
+#if defined(PSX) && defined(__mips__)
+#define	MAP_USE_ASM										// Only real PlayStation uses MIPS terrain code
+#endif													// (PC port uses the C MapRenderTris/Quads path)
 
 // Map display limits
 #define	MAP_MAX_POLY_GROUPS				128				// Was 256 $gr Changed by Tim.

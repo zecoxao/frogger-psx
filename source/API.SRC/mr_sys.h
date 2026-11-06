@@ -313,7 +313,7 @@ extern		MR_COSSIN	rcossin_tbl[];
 				MRScale_matrix.m[2][2] = (d), \
 				MRMulMatrixABB(&MRScale_matrix, (a))
 
-// Special GTE load/save macros (not found in the normal PlayStation header files
+/* Special GTE load/save macros (not found in the normal PlayStation header files
 #define		gte_stdq(r0, r1) __asm__ volatile ( \
 				"cfc2 $12, $27;" \
 				"cfc2 $13, $28;" \
@@ -340,7 +340,7 @@ extern		MR_COSSIN	rcossin_tbl[];
 				: "g"( r0 ) )
 
 
-// MRAcos_table access macros
+// MRAcos_table access macros */
 #define		MR_ACOS_RAW(a) \
 				MRAcos_table[(a) + 0x1000]
 
